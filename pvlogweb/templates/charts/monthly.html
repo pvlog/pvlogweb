@@ -25,6 +25,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/monthly-charts.js') }}"></script>
     <script>
    		var data = {{data|tojson}};
