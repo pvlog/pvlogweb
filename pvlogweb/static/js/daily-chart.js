@@ -150,118 +150,243 @@ function zip(array_1, array_2) {
 	return c;
 }
 
-function extractInverterDataSeries(day_data) {
+function extractInverterData(inverter_day_data) {
 	//generate all series data
 	var data = {
-		times: [],
+		//times: [],
 		total_power: [],
 		frequency: [],
+		tracker_power: {},
 		tracker_voltage: {},
 		tracker_current: {},
-		phases_current: [],
+		phases_power: {},
+		phases_voltage: {},
+		phases_current: {}
 	};
 	
-	var tracker = [];
-	var available_tracker = {};
-	
-	for (var time in day_data) {
-		data.times.push(time * 1000); //convert to milliseconds
-		var spot_data = day_data[time];
+	for (var time_key in inverter_day_data) {
+		var spot_data = inverter_day_data[time_key];
+		time = time_key * 1000; //convert to milliseconds
 		
-		data.frequency.push(spot_data["frequency"] / 1000);
-		data.total_power.push(spot_data["power"]);
+		var value = {};
 		
-		var tracker_dict = {}
-		for (var tracker_key in spot_data["tracker"]) {
-			tracker_dict[tracker_key] =  spot_data["tracker"][tracker_key];
-			available_tracker[tracker_key] = true;
+		data.frequency.push([time, spot_data["frequency"] / 1000]);
+		
+		data.total_power.push([time, spot_data["power"]]);
+		
+		for (var tracker_key in spot_data["dc_inputs"]) {
+			var tracker = spot_data["dc_inputs"][tracker_key];
+			
+			if (!data.tracker_power[tracker_key]) {
+				data.tracker_power[tracker_key] = [];
+			}
+			data.tracker_power[tracker_key].push([time, tracker["power"]]);
+			
+			if (!data.tracker_voltage[tracker_key]) {
+				data.tracker_voltage[tracker_key] = [];
+			}
+			data.tracker_voltage[tracker_key].push([time, tracker["voltage"] /1000]);
+			
+			if (!data.tracker_current[tracker_key]) {
+				data.tracker_current[tracker_key] = [];
+			}
+			data.tracker_current[tracker_key].push([time, tracker["current"] / 1000]);
 		}
 		
-		tracker.push(tracker_dict);
-	}
-
-
-	for (tracker_key in available_tracker) {
-		data.tracker_voltage[tracker_key] = [];
-		data.tracker_current[tracker_key] = [];
-	}
-
-	for (var i = 0; i < tracker.length; i++) {
-		tracker_dict = tracker[i];
-		for (tracker_key in available_tracker) {
-			if (tracker_key in tracker_dict) {
-				var test = tracker_dict[tracker_key];
-				var test2 = test["current"];
-				data.tracker_voltage[tracker_key].push(tracker_dict[tracker_key]["current"] / 1000);
-				data.tracker_current[tracker_key].push(tracker_dict[tracker_key]["voltage"] / 1000);
-			} else {
-				data.tracker_voltage[tracker_key].push(null);
-				data.tracker_current[tracker_key].push(null);
+		for (var phase_key in spot_data["phases"]) {
+			var phase = spot_data["phases"][phase_key];
+			
+			var value = {};
+			
+			if (!data.phases_power[phase_key]) {
+				data.phases_power[phase_key] = [];
 			}
+			data.phases_power[phase_key].push([time, phase["power"]]);
+			
+			if (!data.phases_voltage[phase_key]) {
+				data.phases_voltage[phase_key] = [];
+			}
+			data.phases_voltage[phase_key].push([time, phase["voltage"] / 1000]);
+			
+			if (!data.phases_current[phase_key]) {
+				data.phases_current[phase_key] = [];
+			}
+			data.phases_current[phase_key].push([time, phase["current"] / 1000]);
 		}
 	}
 	
 	return data;
 }
 
-function createHighchartSeries(day_data) {
-	var inverter_data = extractInverterDataSeries(day_data);
-	var times = inverter_data.times;
+function extractInverterDataSeries(day_data) {
+	var data = {};
 	
-	series = [{
-		name: "Power",
-		data: zip(times, inverter_data.total_power),
-		type: 'line',
-		yAxis: 0,
-		inverter_id: 1,
-		data_type: "power",
-		tooltip : {
-			valueSuffix: ' W'
-		},
-	}, {
-		name: "Frequency",
-		data: zip(times, inverter_data.frequency),
-		type: 'line',
-		yAxis: 1,
-		inverter_id: 1,
-		data_type: "frequency",
-		visible: false,
-		tooltip : {
-			valueDecimals : 2,
-			valueSuffix: ' Hz'
-		},
-	}];
-	
-	for (var tracker in inverter_data.tracker_voltage) {
-		series.push({
-			name: "Tracker Voltage " + tracker,
-			data: zip(times, inverter_data.tracker_voltage[tracker]),
-			type: 'line',
-			yAxis: 2,
-			inverter_id: 1,
-			data_type: "voltage",
-			visible: false,
-			tooltip : {
-				valueDecimals : 2,
-				valueSuffix: ' V'
-			},
-		});
+	for (var inverter_id in day_data) {
+		data[inverter_id] = extractInverterData(day_data[inverter_id]);
 	}
 	
-	for (var tracker in inverter_data.tracker_current) {
+	return data;
+}
+
+function createHighchartSeries(day_data) {
+	var invertersData = extractInverterDataSeries(day_data);
+	var series = [];
+	
+	for (var inverterId in invertersData ) {
+		var data = invertersData[inverterId];
+		
 		series.push({
-			name: "Tracker current " + tracker,
-			data: zip(times, inverter_data.tracker_voltage[tracker]),
+			name: "Power",
+			data: data.total_power,
 			type: 'line',
-			yAxis: 3,
-			inverter_id: 1,
-			data_type: "current",
+			yAxis: 0,
+			inverter_id: inverterId,
+			data_type: "power",
+			tooltip : {
+				valueSuffix: ' W'
+			},
+            marker: {
+                enabled: true,
+                radius: 2
+            }
+		});
+		
+		series.push({
+			name: "Frequency",
+			data: data.frequency,
+			type: 'line',
+			yAxis: 1,
+			inverter_id: inverterId,
+			data_type: "frequency",
 			visible: false,
 			tooltip : {
 				valueDecimals : 2,
-				valueSuffix: ' A'
+				valueSuffix: ' Hz'
 			},
+            marker: {
+                enabled: true,
+                radius: 2
+            }
 		});
+		
+		for (var tracker in data.tracker_power) {
+			series.push({
+				name: "Tracker " + tracker + " Power ",
+				data: data.tracker_power[tracker],
+				type: 'line',
+				yAxis: 0,
+				inverter_id: inverterId,
+				data_type: "power",
+				visible: false,
+				tooltip : {
+					valueDecimals : 2,
+					valueSuffix: ' W'
+				},
+	            marker: {
+	                enabled: true,
+	                radius: 2
+	            }
+			});
+		}
+		
+		for (var tracker in data.tracker_voltage) {
+			series.push({
+				name: "Tracker " + tracker + " Voltage ",
+				data: data.tracker_voltage[tracker],
+				type: 'line',
+				yAxis: 2,
+				inverter_id: inverterId,
+				data_type: "voltage",
+				visible: false,
+				tooltip : {
+					valueDecimals : 2,
+					valueSuffix: ' V'
+				},
+	            marker: {
+	                enabled: true,
+	                radius: 2
+	            }
+			});
+		}
+		
+		for (var tracker in data.tracker_current) {
+			series.push({
+				name: "Tracker " + tracker + " Current",
+				data: data.tracker_current[tracker],
+				type: 'line',
+				yAxis: 3,
+				inverter_id: inverterId,
+				data_type: "current",
+				visible: false,
+				tooltip : {
+					valueDecimals : 2,
+					valueSuffix: ' A'
+				},
+	            marker: {
+	                enabled: true,
+	                radius: 2
+	            }
+			});
+		}
+		for (var phase in data.phases_power) {
+			series.push({
+				name: "Phase " + phase + " Power ",
+				data: data.phases_power[phase],
+				type: 'line',
+				yAxis: 0,
+				inverter_id: inverterId,
+				data_type: "power",
+				visible: false,
+				tooltip : {
+					valueDecimals : 2,
+					valueSuffix: ' W'
+				},
+	            marker: {
+	                enabled: true,
+	                radius: 2
+	            }
+			});
+		}
+		
+		for (var phase in data.phases_voltage) {
+			series.push({
+				name: "Phase " + phase + " Voltage ",
+				data: data.phases_voltage[phase],
+				type: 'line',
+				yAxis: 2,
+				inverter_id: inverterId,
+				data_type: "voltage",
+				visible: false,
+				tooltip : {
+					valueDecimals : 2,
+					valueSuffix: ' V'
+				},
+	            marker: {
+	                enabled: true,
+	                radius: 2
+	            }
+			});
+		}
+		
+		for (var phase in data.phases_current) {
+			series.push({
+				name: "Phase " + phase + " Current",
+				data: data.phases_current[phase],
+				type: 'line',
+				yAxis: 3,
+				inverter_id: inverterId,
+				data_type: "current",
+				visible: false,
+				tooltip : {
+					valueDecimals : 2,
+					valueSuffix: ' A'
+				},
+	            marker: {
+	                enabled: true,
+	                radius: 2
+	            }
+			});
+		}
 	}
 	
 	return series;

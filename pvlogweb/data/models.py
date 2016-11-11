@@ -1,53 +1,29 @@
-from pvlogweb import db
-
-
-class ACPhase(db.Model):
-    __tablename__ = 'line'
-    inverter = db.Column(db.Integer, primary_key=True)
-    datetime = db.Column('date', db.Integer, primary_key=True)
-    phase = db.Column('line', db.Integer, primary_key=True)
-    power = db.Column(db.Integer)
-    voltage = db.Column(db.Integer)
-    current = db.Column(db.Integer)
-
-
-class ACData(db.Model):
-    __tablename__ = 'ac_values' #ac_data
-
-    inverter = db.Column(db.Integer, primary_key=True)
-    datetime = db.Column('date', db.Integer, primary_key=True)
-    power = db.Column(db.Integer)
-    frequency = db.Column(db.Integer)
-
-    phases = db.relationship(ACPhase)
-    
-    __table_args__ = (
-        db.ForeignKeyConstraint(
-            [inverter, datetime],
-            [ACPhase.inverter, ACPhase.datetime]
-        ),
-    )
-    
-
-class DCData(db.Model):
-    __tablename__ = 'tracker'
-    
-    inverter = db.Column(db.Integer, primary_key=True)
-    tracker = db.Column('num', db.Integer, primary_key=True)
-    datetime = db.Column('date',db.Integer, primary_key=True)
-    voltage = db.Column(db.Integer)
-    current = db.Column(db.Integer)
-
-class InverterData:
-    def __init__(self, ac_data, dc_data):
-        self.ac_data = ac_data
-        self.dc_data = dc_data
-
-
-    
-    
-    
-    
+# from pvlogweb import db
+# 
+# class Inverter(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     
+# 
+# class Phase(db.Model):
+#     power   = db.Column(db.Integer, nullable=False)
+#     voltage = db.Column(db.Integer)
+#     current = db.Column(db.Integer)
+# 
+# class DcInput(db.Model):
+#     power   = db.Column(db.Integer)
+#     voltage = db.Column(db.Integer)
+#     current = db.Column(db.Integer)
+# 
+# class SpotData:
+#     power = db.Column(db.Integer, nullable=False)
+#     frequency = db.Column(db.Integer)
+#     
+# 
+# 
+#     
+#     
+#     
+#     
     
     
 #             execQuery("CREATE TABLE settings(value VARCHAR(128) PRIMARY KEY,"

@@ -27,7 +27,7 @@
 					</ul>
 					<div class="row">
 						<div class="col-lg-11">
-							<div id="daily-chart"></div>
+							<div id="daily-chart" style="min-height:65vh;"></div>
 						</div>
 						<div class="col-lg-1">
 							<div id="legend">
@@ -52,8 +52,6 @@
 <!--     <script type="text/javascript" src="{{ url_for('static', filename='js/plugins/jqplot.highlighter.js') }}"></script> -->
 <!--     <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script> -->
     <script>
-   		var ac_total_power =  {{ ac_total_power }};
-   		var ac_total_energy = {{ ac_total_energy }};
    		var day_data = {{day_data|tojson}};
     </script>
 {% endblock %}
