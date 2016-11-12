@@ -393,7 +393,7 @@ function createHighchartSeries(day_data) {
 }
 
 $(function () {
-	var chart_data = createHighchartSeries(day_data);
+	var chart_data = createHighchartSeries(data);
 
 	$('#daily-chart').highcharts({
 		title: {

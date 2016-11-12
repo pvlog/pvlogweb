@@ -1,5 +1,5 @@
 $(function () {
-	var chart_data = createHighchartSeries(data);
+	var chart_data = createHighchartSeries(data, 0);
 
 	$('#chart').highcharts({
 		title: {
@@ -48,6 +48,21 @@ $(function () {
 			align: 'right',
 			verticalAlign: 'middle',
 			borderWidth: 0
+		},
+		plotOptions : {
+			series : {
+				cursor : 'pointer',
+				point : {
+					events : {
+						click : function() {
+							var d = new Date(this.category)
+							var year = d.getFullYear();
+							var month = String("00" + (d.getMonth() + 1)).slice(-2);
+							location.href = SCRIPT_ROOT + "/monthly/" + year + "-" + month;
+						}
+					}
+				}
+			}
 		},
 		series: chart_data
 	});

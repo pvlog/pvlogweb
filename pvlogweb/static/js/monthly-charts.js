@@ -1,24 +1,5 @@
-function extractInverterData(inverterData) {
-	// generate all series data
-	var data = [];
-
-	for ( var dateKey in inverterData) {
-		var d = inverterData[dateKey];
-		time = Date.parse(dateKey); // convert to milliseconds
-
-		data.push([ time, d / 1000 ]);
-	}
-
-	return data;
-}
-
 $(function() {
-	var invData = [];
-	for ( var inverter_id in data) {
-		invData[inverter_id] = extractInverterData(data[inverter_id]);
-	}
-
-	var chart_data = createHighchartSeries(invData);
+	var chart_data = createHighchartSeries(data, 2);
 
 	$('#chart').highcharts({
 		title : {

@@ -28,6 +28,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/yearly-charts.js') }}"></script>
     <script>
+		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
    		var data = {{data|tojson}};
    		var curDate = new Date("{{current}}");
    		
@@ -38,7 +39,6 @@
   		    minViewMode: "years",
    		    defaultViewDate: {"year": curDate.getFullYear() }
    		}).on('changeDate', function(e) {
-   			var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
    			location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
    	    });
     </script>
