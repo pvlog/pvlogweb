@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block page_title %} Month Output for {{ current }} {% endblock %}
+{% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	{% if error %}
+	<div class="bg-danger">
+		<span class="text-danger"><strong>Error:</strong> {{ error }} </span>
+	</div>
+	{% endif %}
+	<h1 class="page-header">Year Power Production</h1>
+	<div class="panel panel-default">
+				<div class="panel-heading">
+					<a class="btn btn-default" href="{{ url_for('yearly', date_string=before) }}">
+						<i class="fa fa-angle-left"></i>
+					</a> 
+					<button type="button" class="btn btn-default"  id="datepicker"> Solar Data for {{ current }}</button>
+					<a class="btn btn-default" href="{{ url_for('yearly', date_string=after) }}">
+						<i class="fa fa-angle-right"></i>
+					</a>
+				</div>
+		<div class="panel-body">
+			<div id="chart"></div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/yearly-charts.js') }}"></script>
+    <script>
+   		var data = {{data|tojson}};
+   		var curDate = new Date("{{current}}");
+   		
+   		$('#datepicker').datepicker( {
+   			useCurrent: false,   		    
+   			format: "yyyy",
+   		    startView: "years", 
+  		    minViewMode: "years",
+   		    defaultViewDate: {"year": curDate.getFullYear() }
+   		}).on('changeDate', function(e) {
+   			var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+   			location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
+   	    });
+    </script>
+{% endblock %}
