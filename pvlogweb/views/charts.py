@@ -42,8 +42,8 @@ def daily(day_date=None):
     if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
         raise CommunicationError("getSpotData")
 
-    return render_template("charts/daily.html", today=day_date, yesterday=yesterday, tomorrow=tomorrow,
-                           day_data=response["result"])
+    return render_template("charts/daily.html", current=day_date, before=yesterday, after=tomorrow,
+                           data=response["result"])
 
 @app.route('/monthly')
 @app.route('/monthly/<date_string>')
@@ -100,3 +100,21 @@ def yearly(date_string=None):
 
     return render_template("charts/yearly.html", current=year, before=year - 1,
                             after=year + 1, data=response["result"])
+    
+@app.route('/totaly')
+def totaly(date_string=None):
+    payload = {
+        "method": "getYearData",
+        "params": {},
+        "jsonrpc": "2.0",
+        "id": 0
+    }
+
+    response = requests.post(
+        url, data=json.dumps(payload), headers=headers).json()
+         
+    if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
+        raise CommunicationError("getYearData")
+
+    return render_template("charts/totaly.html", data=response["result"])
+
