@@ -48,6 +48,7 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/daily-chart.js') }}"></script>
 	<script>
 		$('#chartNav').addClass('collapse in');
+		$('#day').addClass("active");
 		var data = {{data|tojson}};
 		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 

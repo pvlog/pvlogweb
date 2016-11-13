@@ -12,3 +12,4 @@ db = SQLAlchemy(app)
 from pvlogweb.data import  models
 from pvlogweb.views import test
 from pvlogweb.views import charts
+from pvlogweb.views import views

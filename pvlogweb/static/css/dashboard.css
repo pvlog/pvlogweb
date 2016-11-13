@@ -61,7 +61,11 @@ body {
 }
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+.nav-sidebar > .active > a:focus,
+.nav-second-level > .active > a,
+.nav-second-level > .active > a:hover,
+.nav-second-level > .active > a:focus
+ {
   color: #fff;
   background-color: #428bca;
 }
