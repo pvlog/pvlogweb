@@ -19,23 +19,13 @@
 </div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/totaly-chart.js') }}"></script>
-    <script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/totaly-chart.js') }}"></script>
+	<script>
+		$('#chartNav').addClass('collapse in');
 		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-   		var data = {{data|tojson}};
-   		var curDate = new Date("{{current}}");
-   		
-   		/*
-   		$('#datepicker').datepicker( {
-   			useCurrent: false,   		    
-   			format: "yyyy",
-   		    startView: "years", 
-  		    minViewMode: "years",
-   		    defaultViewDate: {"year": curDate.getFullYear() }
-   		}).on('changeDate', function(e) {
-   			var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-   			location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
-   	    });*/
-    </script>
+		var data = {{data|tojson}};
+		var curDate = new Date("{{current}}");
+
+	</script>
 {% endblock %}

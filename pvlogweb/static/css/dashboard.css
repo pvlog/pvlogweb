@@ -103,3 +103,12 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+.sidebar .nav-second-level li,
+.sidebar .nav-third-level li {
+    border-bottom: none !important;
+}
+
+.sidebar .nav-second-level li a {
+    padding-left: 37px;
+}
