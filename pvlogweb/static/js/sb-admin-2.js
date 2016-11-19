@@ -36,8 +36,8 @@ function resizeWindow() {
 $(function() {
 	$(window)
 			.on(
-					'resize',
-					resizeWindow
+				'resize',
+				resizeWindow
 			);
 	resizeWindow();
 

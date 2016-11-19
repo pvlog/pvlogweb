@@ -1,12 +1,3 @@
-function zip(array_1, array_2) {
-	var c = [];
-	for (var i = 0; i < array_2.length; i++) {
-		c.push([ array_1[i], array_2[i] ]);
-	}
-
-	return c;
-}
-
 function extractInverterData(inverterData) {
 	// generate all series data
 	var data = [];

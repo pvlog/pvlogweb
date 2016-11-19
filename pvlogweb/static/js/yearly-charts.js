@@ -1,5 +1,5 @@
 $(function () {
-	var chart_data = createHighchartSeries(data, 0);
+	var chartData = createHighchartSeries(data, 0);
 
 	$('#chart').highcharts({
 		title: {
@@ -64,6 +64,6 @@ $(function () {
 				}
 			}
 		},
-		series: chart_data
+		series: chartData
 	});
 });
