@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block page_title %} Overview {% endblock %}
+{% block content %}
+<div class="lg-2">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Status
+		</div>
+		<div class="panel-body">
+			<table class="table table-hover">
+				<thead>
+						<tr>
+						<th> <strong>Device</strong> </th>
+						<th> <strong>Status</strong> </th>
+						<th> <strong>PAC</strong> </th>
+						<th> <strong>PDC</strong> </th>
+					</tr>
+				</thead>
+				  <tbody id="inverterStatus">
+			</table>
+		</div>
+	</div>
+</div>
+<div class="lg-10">
+	<h1 class="page-header">Last 30 Days Power Production</h1>
+	<div class="panel panel-default">
+				<div class="panel-heading">
+					<a class="btn btn-default" href="{{ url_for('monthly', date_string=before) }}">
+						<i class="fa fa-angle-left"></i>
+					</a>
+					<button type="button" class="btn btn-default"  id="datepicker"> Solar Data for {{ current }}</button>
+					<a class="btn btn-default" href="{{ url_for('monthly', date_string=after) }}">
+						<i class="fa fa-angle-right"></i>
+					</a>
+				</div>
+		<div class="panel-body">
+			<div id="chart"></div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+	<script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/monthly-charts.js') }}"></script>
+	<script>
+		$('#overview').addClass("active");
+		var data = {{data|tojson}};
+		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+		function loadData() {
+			$.getJson(SCRIPT_ROOT + '/live_data', {}, function(data) {
+			}
+		}
+
+		var refreshId = setInterval(loadData, 10 * 1000);
+	</script>
+{% endblock %}

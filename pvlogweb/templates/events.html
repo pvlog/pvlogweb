@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block page_title %} Events{% endblock %}
+{% block content %}
+<div class="lg-12">
+	<h1 class="page-header">Events</h1>
+	<table id="eventTable" class="table table-striped table-bordered"></table>
+</div>
+{% endblock %}
+{% block scripts %}
+	<script>
+		$('#events').addClass("active");
+		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		var data = {{data|tojson}};
+
+		moment.locale(window.navigator.userLanguage || window.navigator.language);
+
+		$(document).ready(function() {
+			var dataSet = [];
+
+			for (var inverterId in data) {
+				var inverterEntry = data[inverterId];
+				for (var entry of inverterEntry) {
+					dataSet.push([inverterId, moment(entry.time * 1000).format('lll'), entry.number.toString(), entry.message]);
+				}
+			}
+
+			$.fn.dataTable.moment('lll');
+
+			$('#eventTable').DataTable( {
+				data: dataSet,
+				columns: [
+					{ title: "Inverter" },
+					{ title: "Time" },
+					{ title: "Number" },
+					{ title: "Message" },
+				]
+			} );
+		} );
+
+	</script>
+{% endblock %}
