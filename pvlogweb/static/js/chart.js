@@ -2,9 +2,9 @@ function extractInverterData(inverterData) {
 	// generate all series data
 	var data = [];
 
-	for ( var dateKey in inverterData) {
-		var d = inverterData[dateKey];
-		var time = Date.parse(dateKey);
+	for (let dateKey in inverterData) {
+		let d = inverterData[dateKey];
+		let time = Date.parse(dateKey);
 
 		data.push([ time, d / 1000 ]);
 	}
@@ -15,7 +15,7 @@ function extractInverterData(inverterData) {
 function extractData(data) {
 	var invData = {};
 
-	for ( var inverterId in data) {
+	for (let inverterId in data) {
 		invData[inverterId] = extractInverterData(data[inverterId]);
 	}
 
@@ -27,8 +27,8 @@ function createHighchartSeries(chartData, decimals) {
 
 	var invertersData = extractData(chartData);
 
-	for ( var inverterId in invertersData) {
-		var data = invertersData[inverterId];
+	for (let inverterId in invertersData) {
+		let data = invertersData[inverterId];
 
 		series.push({
 			name : inverterId,

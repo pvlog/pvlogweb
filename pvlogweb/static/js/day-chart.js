@@ -1,68 +1,68 @@
-function extractInverterData(inverter_day_data) {
+function extractInverterData(inverterDayData) {
 	//generate all series data
 	var data = {
 		//times: [],
-		total_power : [],
+		totalPower : [],
 		frequency : [],
-		tracker_power : {},
-		tracker_voltage : {},
-		tracker_current : {},
-		phases_power : {},
-		phases_voltage : {},
-		phases_current : {}
+		trackerPower : {},
+		trackerVoltage : {},
+		trackerCurrent : {},
+		phasesPower : {},
+		phasesVoltage : {},
+		phasesCurrent : {}
 	};
 
-	for ( var time_key in inverter_day_data) {
-		var spot_data = inverter_day_data[time_key];
-		time = time_key * 1000; //convert to milliseconds
+	for (let timeKey in inverterDayData) {
+		var spotData = inverterDayData[timeKey];
+		time = timeKey * 1000; //convert to milliseconds
 
 		var value = {};
 
-		data.frequency.push([ time, spot_data["frequency"] / 1000 ]);
+		data.frequency.push([ time, spotData["frequency"] / 1000 ]);
 
-		data.total_power.push([ time, spot_data["power"] ]);
+		data.totalPower.push([ time, spotData["power"] ]);
 
-		for ( var tracker_key in spot_data["dc_inputs"]) {
-			var tracker = spot_data["dc_inputs"][tracker_key];
+		for (let tracker_key in spotData["dc_inputs"]) {
+			var tracker = spotData["dc_inputs"][tracker_key];
 
-			if (!data.tracker_power[tracker_key]) {
-				data.tracker_power[tracker_key] = [];
+			if (!data.trackerPower[tracker_key]) {
+				data.trackerPower[tracker_key] = [];
 			}
-			data.tracker_power[tracker_key].push([ time, tracker["power"] ]);
+			data.trackerPower[tracker_key].push([ time, tracker["power"] ]);
 
-			if (!data.tracker_voltage[tracker_key]) {
-				data.tracker_voltage[tracker_key] = [];
+			if (!data.trackerVoltage[tracker_key]) {
+				data.trackerVoltage[tracker_key] = [];
 			}
-			data.tracker_voltage[tracker_key].push([ time,
+			data.trackerVoltage[tracker_key].push([ time,
 					tracker["voltage"] / 1000 ]);
 
-			if (!data.tracker_current[tracker_key]) {
-				data.tracker_current[tracker_key] = [];
+			if (!data.trackerCurrent[tracker_key]) {
+				data.trackerCurrent[tracker_key] = [];
 			}
-			data.tracker_current[tracker_key].push([ time,
+			data.trackerCurrent[tracker_key].push([ time,
 					tracker["current"] / 1000 ]);
 		}
 
-		for ( var phase_key in spot_data["phases"]) {
-			var phase = spot_data["phases"][phase_key];
+		for (let phase_key in spotData["phases"]) {
+			let phase = spotData["phases"][phase_key];
 
-			var value = {};
+			let value = {};
 
-			if (!data.phases_power[phase_key]) {
-				data.phases_power[phase_key] = [];
+			if (!data.phasesPower[phase_key]) {
+				data.phasesPower[phase_key] = [];
 			}
-			data.phases_power[phase_key].push([ time, phase["power"] ]);
+			data.phasesPower[phase_key].push([ time, phase["power"] ]);
 
-			if (!data.phases_voltage[phase_key]) {
-				data.phases_voltage[phase_key] = [];
+			if (!data.phasesVoltage[phase_key]) {
+				data.phasesVoltage[phase_key] = [];
 			}
-			data.phases_voltage[phase_key]
+			data.phasesVoltage[phase_key]
 					.push([ time, phase["voltage"] / 1000 ]);
 
-			if (!data.phases_current[phase_key]) {
-				data.phases_current[phase_key] = [];
+			if (!data.phasesCurrent[phase_key]) {
+				data.phasesCurrent[phase_key] = [];
 			}
-			data.phases_current[phase_key]
+			data.phasesCurrent[phase_key]
 					.push([ time, phase["current"] / 1000 ]);
 		}
 	}
@@ -70,29 +70,33 @@ function extractInverterData(inverter_day_data) {
 	return data;
 }
 
-function extractInverterDataSeries(day_data) {
+function extractInverterDataSeries(dayData) {
 	var data = {};
 
-	for ( var inverter_id in day_data) {
-		data[inverter_id] = extractInverterData(day_data[inverter_id]);
+	for (let inverterId in dayData) {
+		data[inverterId] = extractInverterData(dayData[inverterId]);
 	}
 
 	return data;
 }
 
-function createHighchartSeries(day_data) {
-	var invertersData = extractInverterDataSeries(day_data);
+function createHighchartSeries(dayData) {
+	var gt = new Gettext({domain: 'pvlogweb'});
+	var _ = function(msgid) { return gt.gettext(msgid); };
+	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
+	
+	var invertersData = extractInverterDataSeries(dayData);
 	var series = [];
 
-	for (var inverterId in invertersData) {
-		var data = invertersData[inverterId];
+	for (let inverterId in invertersData) {
+		let data = invertersData[inverterId];
 
 		series.push({
-			name : "Power",
-			data : data.total_power,
+			name : _("Power"),
+			data : data.totalPower,
 			type : 'line',
 			yAxis : 0,
-			inverter_id : inverterId,
+			inverterId : inverterId,
 			data_type : "power",
 			tooltip : {
 				valueSuffix : ' W',
@@ -105,11 +109,11 @@ function createHighchartSeries(day_data) {
 		});
 
 		series.push({
-			name : "Frequency",
+			name : _("Frequency"),
 			data : data.frequency,
 			type : 'line',
 			yAxis : 1,
-			inverter_id : inverterId,
+			inverterId : inverterId,
 			data_type : "frequency",
 			visible : false,
 			tooltip : {
@@ -122,13 +126,13 @@ function createHighchartSeries(day_data) {
 			}
 		});
 
-		for (var tracker in data.tracker_power) {
+		for (let tracker in data.trackerPower) {
 			series.push({
 				name : "Tracker " + tracker + " Power ",
-				data : data.tracker_power[tracker],
+				data : data.trackerPower[tracker],
 				type : 'line',
 				yAxis : 0,
-				inverter_id : inverterId,
+				inverterId : inverterId,
 				data_type : "power",
 				visible : false,
 				tooltip : {
@@ -142,13 +146,13 @@ function createHighchartSeries(day_data) {
 			});
 		}
 
-		for (var tracker in data.tracker_voltage) {
+		for (let tracker in data.trackerVoltage) {
 			series.push({
 				name : "Tracker " + tracker + " Voltage ",
-				data : data.tracker_voltage[tracker],
+				data : data.trackerVoltage[tracker],
 				type : 'line',
 				yAxis : 2,
-				inverter_id : inverterId,
+				inverterId : inverterId,
 				data_type : "voltage",
 				visible : false,
 				tooltip : {
@@ -162,13 +166,13 @@ function createHighchartSeries(day_data) {
 			});
 		}
 
-		for (var tracker in data.tracker_current) {
+		for (let tracker in data.trackerCurrent) {
 			series.push({
 				name : "Tracker " + tracker + " Current",
-				data : data.tracker_current[tracker],
+				data : data.trackerCurrent[tracker],
 				type : 'line',
 				yAxis : 3,
-				inverter_id : inverterId,
+				inverterId : inverterId,
 				data_type : "current",
 				visible : false,
 				tooltip : {
@@ -181,13 +185,13 @@ function createHighchartSeries(day_data) {
 				}
 			});
 		}
-		for (var phase in data.phases_power) {
+		for (let phase in data.phasesPower) {
 			series.push({
 				name : "Phase " + phase + " Power ",
-				data : data.phases_power[phase],
+				data : data.phasesPower[phase],
 				type : 'line',
 				yAxis : 0,
-				inverter_id : inverterId,
+				inverterId : inverterId,
 				data_type : "power",
 				visible : false,
 				tooltip : {
@@ -201,13 +205,13 @@ function createHighchartSeries(day_data) {
 			});
 		}
 
-		for (var phase in data.phases_voltage) {
+		for (let phase in data.phasesVoltage) {
 			series.push({
 				name : "Phase " + phase + " Voltage ",
-				data : data.phases_voltage[phase],
+				data : data.phasesVoltage[phase],
 				type : 'line',
 				yAxis : 2,
-				inverter_id : inverterId,
+				inverterId : inverterId,
 				data_type : "voltage",
 				visible : false,
 				tooltip : {
@@ -221,13 +225,13 @@ function createHighchartSeries(day_data) {
 			});
 		}
 
-		for (var phase in data.phases_current) {
+		for (let phase in data.phasesCurrent) {
 			series.push({
 				name : "Phase " + phase + " Current",
-				data : data.phases_current[phase],
+				data : data.phasesCurrent[phase],
 				type : 'line',
 				yAxis : 3,
-				inverter_id : inverterId,
+				inverterId : inverterId,
 				data_type : "current",
 				visible : false,
 				tooltip : {
@@ -246,11 +250,15 @@ function createHighchartSeries(day_data) {
 }
 
 $(function() {
-	var chart_data = createHighchartSeries(data);
+	var gt = new Gettext({domain: 'pvlogweb'});
+	var _ = function(msgid) { return gt.gettext(msgid); };
+	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
+	
+	var charData = createHighchartSeries(data);
 
 	$('#daily-chart').highcharts({
 		title : {
-			text : 'Day Data',
+			text : _('Day Data'),
 			x : -20
 		// center
 		},
@@ -265,9 +273,9 @@ $(function() {
 			//				year : '%b'
 			//			},
 			title : {
-				text : 'Time'
+				text : _('Time')
 			}
-		//			data: chart_data.times
+		//			data: charData.times
 		},
 		yAxis : [ {
 			labels : {
@@ -277,7 +285,7 @@ $(function() {
 				}
 			},
 			title : {
-				text : 'Power',
+				text : _('Power'),
 				style : {
 				//color: Highcharts.getOptions().colors[2]
 				}
@@ -286,7 +294,7 @@ $(function() {
 		}, { // Secondary yAxis
 			//gridLineWidth: 0,
 			title : {
-				text : 'Frequency',
+				text : _('Frequency'),
 				style : {
 				//color: Highcharts.getOptions().colors[0]
 				}
@@ -301,7 +309,7 @@ $(function() {
 		}, { // third yAxis
 			//gridLineWidth: 0,
 			title : {
-				text : 'Voltage',
+				text : _('Voltage'),
 				style : {
 				//color: Highcharts.getOptions().colors[0]
 				}
@@ -316,7 +324,7 @@ $(function() {
 		}, { // fourth yAxis
 			//gridLineWidth: 0,
 			title : {
-				text : 'Current',
+				text : _('Current'),
 				style : {
 				//color: Highcharts.getOptions().colors[0]
 				}
@@ -339,6 +347,6 @@ $(function() {
 			verticalAlign : 'middle',
 			borderWidth : 0
 		},
-		series : chart_data
+		series : charData
 	});
 });

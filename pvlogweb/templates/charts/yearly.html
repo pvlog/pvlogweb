@@ -25,9 +25,12 @@
 </div>
 {% endblock %}
 {% block scripts %}
-	<script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/yearly-charts.js') }}"></script>
-	<script>
+	{% assets filters="babel,jsmin", output="gen/year-chart.js",
+		"js/year-chart.js" %}
+		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
+
+	<script type="text/javascript">
 		$('#chartNav').addClass('collapse in');
 		$('#year').addClass("active");
 		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};

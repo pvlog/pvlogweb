@@ -7,35 +7,10 @@
 </div>
 {% endblock %}
 {% block scripts %}
-	<script>
-		$('#events').addClass("active");
-		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-		var data = {{data|tojson}};
-
-		moment.locale(window.navigator.userLanguage || window.navigator.language);
-
-		$(document).ready(function() {
-			var dataSet = [];
-
-			for (var inverterId in data) {
-				var inverterEntry = data[inverterId];
-				for (var entry of inverterEntry) {
-					dataSet.push([inverterId, moment(entry.time * 1000).format('lll'), entry.number.toString(), entry.message]);
-				}
-			}
-
-			$.fn.dataTable.moment('lll');
-
-			$('#eventTable').DataTable( {
-				data: dataSet,
-				columns: [
-					{ title: "Inverter" },
-					{ title: "Time" },
-					{ title: "Number" },
-					{ title: "Message" },
-				]
-			} );
-		} );
-
-	</script>
+{{ javascript_tag('event_js') | safe }}
+<script>
+	$('#events').addClass("active");
+	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var data = {{data|tojson}};
+</script>
 {% endblock %}

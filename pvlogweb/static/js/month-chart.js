@@ -1,9 +1,13 @@
 $(function() {
+	var gt = new Gettext({domain: 'pvlogweb'});
+	var _ = function(msgid) { return gt.gettext(msgid); };
+	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
+	
 	var chartData = createHighchartSeries(data, 2);
 
 	$('#chart').highcharts({
 		title : {
-			text : 'Month Data',
+			text : _('Month Data'),
 			x : -20
 		// center
 		},
@@ -18,7 +22,7 @@ $(function() {
 				year : '%b'
 			},
 			title : {
-				text : 'Date'
+				text : _('Date')
 			}
 		},
 		yAxis : [ {
@@ -29,7 +33,7 @@ $(function() {
 				}
 			},
 			title : {
-				text : 'Energy',
+				text : _('Energy'),
 				style : {
 				// color: Highcharts.getOptions().colors[2]
 				}

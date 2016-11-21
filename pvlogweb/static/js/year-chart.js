@@ -1,9 +1,13 @@
 $(function () {
+	var gt = new Gettext({domain: 'pvlogweb'});
+	var _ = function(msgid) { return gt.gettext(msgid); };
+	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
+	
 	var chartData = createHighchartSeries(data, 0);
 
 	$('#chart').highcharts({
 		title: {
-			text: 'Year Data',
+			text: _('Month Data'),
 			x: -20 // center
 		},
 		subtitle: {
@@ -12,12 +16,12 @@ $(function () {
 		},
 		xAxis : {
 			type : 'datetime',
-//			dateTimeLabelFormats : { // don't display the dummy year
-//				month : '%b',
-//				year : '%b'
-//			},
+			dateTimeLabelFormats : { // don't display the dummy year
+				month : '%b',
+				year : '%b'
+			},
 			title : {
-				text : 'Date'
+				text : _('Date')
 			}
 		},
 		yAxis: [{
@@ -28,7 +32,7 @@ $(function () {
 				}
 			},
 			title: {
-				text: 'Energy',
+				text: _('Energy'),
 				style: {
 					//color: Highcharts.getOptions().colors[2]
 				}
@@ -55,13 +59,15 @@ $(function () {
 				point : {
 					events : {
 						click : function() {
-							var year = new Date(this.category).getFullYear();
-							location.href = SCRIPT_ROOT + "/yearly/" + year
+							var d = new Date(this.category)
+							var year = d.getFullYear();
+							var month = String("00" + (d.getMonth() + 1)).slice(-2);
+							location.href = SCRIPT_ROOT + "/monthly/" + year + "-" + month;
 						}
 					}
 				}
 			}
 		},
-		series : chartData
+		series: chartData
 	});
 });

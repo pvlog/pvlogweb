@@ -45,8 +45,12 @@
 </div>
 {% endblock %}
 {% block scripts %}
-	<script type="text/javascript" src="{{ url_for('static', filename='js/daily-chart.js') }}"></script>
-	<script>
+	{% assets filters="babel,jsmin", output="gen/total-chart.js",
+		"js/total-chart.js" %}
+		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
+	
+	<script type="text/javascript">
 		$('#chartNav').addClass('collapse in');
 		$('#day').addClass("active");
 		var data = {{data|tojson}};

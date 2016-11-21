@@ -18,10 +18,14 @@
 	</div>
 </div>
 {% endblock %}
+
 {% block scripts %}
-	<script type="text/javascript" src="{{ url_for('static', filename='js/charts.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/totaly-chart.js') }}"></script>
-	<script>
+	{% assets filters="babel,jsmin", output="gen/total-chart.js",
+		"js/total-chart.js" %}
+		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
+
+	<script type="text/javascript">
 		$('#chartNav').addClass('collapse in');
 		$('#total').addClass("active");
 		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
