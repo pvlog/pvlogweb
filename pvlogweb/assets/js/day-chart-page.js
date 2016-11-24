@@ -8,6 +8,8 @@ function extractInverterData(inverterDayData) {
 		//times: [],
 		totalPower : [],
 		frequency : [],
+		trackerTotalPower: [],
+		efficiency: [],
 		trackerPower : {},
 		trackerVoltage : {},
 		trackerCurrent : {},
@@ -26,6 +28,7 @@ function extractInverterData(inverterDayData) {
 
 		data.totalPower.push([ time, spotData["power"] ]);
 
+		let trackerTotalPower = 0;
 		for (let tracker_key in spotData["dc_inputs"]) {
 			var tracker = spotData["dc_inputs"][tracker_key];
 
@@ -33,6 +36,7 @@ function extractInverterData(inverterDayData) {
 				data.trackerPower[tracker_key] = [];
 			}
 			data.trackerPower[tracker_key].push([ time, tracker["power"] ]);
+			trackerTotalPower += tracker["power"]
 
 			if (!data.trackerVoltage[tracker_key]) {
 				data.trackerVoltage[tracker_key] = [];
@@ -46,6 +50,9 @@ function extractInverterData(inverterDayData) {
 			data.trackerCurrent[tracker_key].push([ time,
 					tracker["current"] / 1000 ]);
 		}
+
+		data.trackerTotalPower.push([time, trackerTotalPower]);
+		data.efficiency.push([time, spotData["power"] / trackerTotalPower * 100]);
 
 		for (let phase_key in spotData["phases"]) {
 			let phase = spotData["phases"][phase_key];
@@ -96,7 +103,7 @@ function createHighchartSeries(dayData) {
 		let data = invertersData[inverterId];
 
 		series.push({
-			name : _("Power"),
+			name : _("Power AC"),
 			data : data.totalPower,
 			type : 'line',
 			yAxis : 0,
@@ -104,7 +111,7 @@ function createHighchartSeries(dayData) {
 			data_type : "power",
 			tooltip : {
 				valueSuffix : ' W',
-				valueDecimals : 0
+				valueDecimals : 1
 			},
 			marker : {
 				enabled : true,
@@ -123,6 +130,42 @@ function createHighchartSeries(dayData) {
 			tooltip : {
 				valueDecimals : 3,
 				valueSuffix : ' Hz'
+			},
+			marker : {
+				enabled : true,
+				radius : 2
+			}
+		});
+
+		series.push({
+			name : _("Power DC"),
+			data : data.trackerTotalPower,
+			type : 'line',
+			yAxis : 0,
+			inverterId : inverterId,
+			data_type : "power",
+			visible : false,
+			tooltip : {
+				valueDecimals : 1,
+				valueSuffix : ' W'
+			},
+			marker : {
+				enabled : true,
+				radius : 2
+			}
+		});
+
+		series.push({
+			name : _("Efficiency"),
+			data : data.efficiency,
+			type : 'line',
+			yAxis : 4,
+			inverterId : inverterId,
+			data_type : "percent",
+			visible : false,
+			tooltip : {
+				valueDecimals : 2,
+				valueSuffix : ' %'
 			},
 			marker : {
 				enabled : true,
@@ -189,6 +232,7 @@ function createHighchartSeries(dayData) {
 				}
 			});
 		}
+
 		for (let phase in data.phasesPower) {
 			series.push({
 				name : "Phase " + phase + " Power ",
@@ -349,7 +393,23 @@ $(function() {
 				}
 			},
 			showEmpty : false
-		} ],
+		}, { // fifth yAxis
+			//gridLineWidth: 0,
+			title : {
+				text : "",
+				style : {
+				//color: Highcharts.getOptions().colors[0]
+				}
+			},
+			labels : {
+				format : '{value} %',
+				style : {
+				//color: Highcharts.getOptions().colors[0]
+				}
+			},
+			showEmpty : false
+		},
+		],
 		tooltip : {
 			shared : true
 		},
