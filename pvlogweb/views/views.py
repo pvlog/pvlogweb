@@ -2,6 +2,7 @@ from flask.templating import render_template
 from pvlogweb import app
 import requests
 from util import CommunicationError
+from flask_babel import gettext, ngettext
 import json
 
 url = "http://192.168.178.82:8383"

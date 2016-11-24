@@ -3,10 +3,11 @@
 {% block content %}
 <div class="lg-12">
 <h1>Pvlogweb</h1>
-Pvlogweb {{ _(is a web interface for pvlog) }}
+Pvlogweb {{ _('is a web interface for pvlog') }}
 </div>
 {% endblock %}
 {% block scripts %}
+{{ javascript_tag('about') | safe }}
 <script>
 	$('#about').addClass("active");
 </script>

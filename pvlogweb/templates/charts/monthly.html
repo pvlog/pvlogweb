@@ -25,28 +25,13 @@
 </div>
 {% endblock %}
 {% block scripts %}
-{% assets filters="babel,jsmin", output="gen/month-chart.js",
-	"js/month-chart.js" %}
-<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
+{{ javascript_tag('month_chart') | safe }}
 
 	<script type="text/javascript">
 		$('#chartNav').addClass('collapse in');
 		$('#month').addClass("active");
 		var data = {{data|tojson}};
 		var curDate = new Date("{{current}}");
-
-		$('#datepicker').datepicker( {
-			useCurrent: false,
-			format: "yyyy-mm",
-			startView: "months",
-			minViewMode: "months",
-			defaultViewDate: {"year": curDate.getFullYear(), "month": curDate.getMonth() }
-		}).on('changeDate', function(e) {
-			var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-			var month =  String("00" + (e.date.getMonth() + 1)).slice(-2);
-			var monthDate = e.date.getFullYear() + "-" + month
-			location.href = SCRIPT_ROOT + "/monthly/" + monthDate;
-		});
+		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	</script>
 {% endblock %}

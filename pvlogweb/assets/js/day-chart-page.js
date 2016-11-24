@@ -1,3 +1,7 @@
+import Gettext from 'node-gettext';
+import Highcharts from 'highcharts';
+import 'bootstrap-datepicker';
+
 function extractInverterData(inverterDayData) {
 	//generate all series data
 	var data = {
@@ -13,10 +17,10 @@ function extractInverterData(inverterDayData) {
 	};
 
 	for (let timeKey in inverterDayData) {
-		var spotData = inverterDayData[timeKey];
-		time = timeKey * 1000; //convert to milliseconds
+		let spotData = inverterDayData[timeKey];
+		let time = timeKey * 1000; //convert to milliseconds
 
-		var value = {};
+		let value = {};
 
 		data.frequency.push([ time, spotData["frequency"] / 1000 ]);
 
@@ -83,7 +87,7 @@ function extractInverterDataSeries(dayData) {
 function createHighchartSeries(dayData) {
 	var gt = new Gettext({domain: 'pvlogweb'});
 	var _ = function(msgid) { return gt.gettext(msgid); };
-	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
+	//var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
 	
 	var invertersData = extractInverterDataSeries(dayData);
 	var series = [];
@@ -255,8 +259,17 @@ $(function() {
 	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
 	
 	var charData = createHighchartSeries(data);
+	
+	$('#datepicker').datepicker( {
+		useCurrent: false,
+	}).on('changeDate', function(e) {
+		var month =  String("00" + (e.date.getMonth() + 1)).slice(-2);
+		var day   =  String("00" + (e.date.getDate())).slice(-2);
+		var dayDate = e.date.getFullYear() + "-" + month + "-" + day
+		location.href = SCRIPT_ROOT + "/daily/" + dayDate
+	});
 
-	$('#daily-chart').highcharts({
+	Highcharts.chart('daily-chart',{
 		title : {
 			text : _('Day Data'),
 			x : -20

@@ -7,7 +7,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
-{{ javascript_tag('event_js') | safe }}
+{{ javascript_tag('event') | safe }}
 <script>
 	$('#events').addClass("active");
 	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};

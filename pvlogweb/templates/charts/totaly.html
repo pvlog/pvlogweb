@@ -20,17 +20,14 @@
 {% endblock %}
 
 {% block scripts %}
-	{% assets filters="babel,jsmin", output="gen/total-chart.js",
-		"js/total-chart.js" %}
-		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-	{% endassets %}
+{{ javascript_tag('total_chart') | safe }}
 
-	<script type="text/javascript">
-		$('#chartNav').addClass('collapse in');
-		$('#total').addClass("active");
-		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-		var data = {{data|tojson}};
-		var curDate = new Date("{{current}}");
+<script type="text/javascript">
+	$('#chartNav').addClass('collapse in');
+	$('#total').addClass("active");
+	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var data = {{data|tojson}};
+	var curDate = new Date("{{current}}");
 
-	</script>
+</script>
 {% endblock %}

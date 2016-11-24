@@ -1,15 +1,34 @@
 from flask import Flask
-from flask_assets import Environment, Bundle
 from pvlogweb.converters.DateConverter import DateConverter
 #from webassets.filter import get_filter
-from flask.ext.babel import Babel
+from flask_babel import Babel
 from flask_webpack import Webpack
 
 app = Flask(__name__)
-app.url_map.converters['date_converter'] = DateConverter
 
 babel = Babel(app)
+
+app.url_map.converters['date_converter'] = DateConverter
+
+params = {
+    'DEBUG': True,
+    'WEBPACK_MANIFEST_PATH': '../build/manifest.json'
+}
+app.config.update(params)
+
+webpack = Webpack()
 webpack.init_app(app)
+
+LANGUAGES = {
+    'en': 'English',
+    'de': 'Deutsch'
+}
+
+# @babel.localeselector
+# def get_locale():
+#     return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+
+
 # assets = Environment(app)
 # 
 # assets.debug = True

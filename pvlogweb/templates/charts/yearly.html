@@ -25,26 +25,23 @@
 </div>
 {% endblock %}
 {% block scripts %}
-	{% assets filters="babel,jsmin", output="gen/year-chart.js",
-		"js/year-chart.js" %}
-		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-	{% endassets %}
+{{ javascript_tag('total_chart') | safe }}
 
-	<script type="text/javascript">
-		$('#chartNav').addClass('collapse in');
-		$('#year').addClass("active");
-		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-		var data = {{data|tojson}};
-		var curDate = new Date("{{current}}");
+<script type="text/javascript">
+	$('#chartNav').addClass('collapse in');
+	$('#year').addClass("active");
+	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var data = {{data|tojson}};
+	var curDate = new Date("{{current}}");
 
-		$('#datepicker').datepicker( {
-			useCurrent: false,
-			format: "yyyy",
-			startView: "years",
-			minViewMode: "years",
-			defaultViewDate: {"year": curDate.getFullYear() }
-		}).on('changeDate', function(e) {
-		location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
-		});
-	</script>
+	$('#datepicker').datepicker( {
+		useCurrent: false,
+		format: "yyyy",
+		startView: "years",
+		minViewMode: "years",
+		defaultViewDate: {"year": curDate.getFullYear() }
+	}).on('changeDate', function(e) {
+	location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
+	});
+</script>
 {% endblock %}

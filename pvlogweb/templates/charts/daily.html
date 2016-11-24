@@ -21,22 +21,22 @@
 					</a>
 				</div>
 				<div class="panel-body">
-					<ul class="list-inline">
-						<li>Inverter 1</li>
-						<li>Inverter 2</li>
-						<li>Inverter 3</li>
-					</ul>
+<!-- 					<ul class="list-inline"> -->
+<!-- 						<li>Inverter 1</li> -->
+<!-- 						<li>Inverter 2</li> -->
+<!-- 						<li>Inverter 3</li> -->
+<!-- 					</ul> -->
 					<div class="row">
-						<div class="col-lg-11">
+						<div class="col-lg-12">
 							<div id="daily-chart" style="min-height:65vh;"></div>
 						</div>
-						<div class="col-lg-1">
-							<div id="legend">
-								<div>Udc</div>
-								<div>Idc</div>
-								<div>Pdc</div>
-							</div>
-						</div>
+<!-- 						<div class="col-lg-1"> -->
+<!-- 							<div id="legend"> -->
+<!-- 								<div>Udc</div> -->
+<!-- 								<div>Idc</div> -->
+<!-- 								<div>Pdc</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
 					</div>
 				</div>
 			</div>
@@ -45,24 +45,12 @@
 </div>
 {% endblock %}
 {% block scripts %}
-	{% assets filters="babel,jsmin", output="gen/total-chart.js",
-		"js/total-chart.js" %}
-		<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-	{% endassets %}
-	
-	<script type="text/javascript">
-		$('#chartNav').addClass('collapse in');
-		$('#day').addClass("active");
-		var data = {{data|tojson}};
-		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+{{ javascript_tag('day_chart') | safe }}
 
-		$('#datepicker').datepicker( {
-			useCurrent: false,
-		}).on('changeDate', function(e) {
-			var month =  String("00" + (e.date.getMonth() + 1)).slice(-2);
-			var day   =  String("00" + (e.date.getDay() + 1)).slice(-2);
-			var dayDate = e.date.getFullYear() + "-" + month + "-" + day
-			location.href = SCRIPT_ROOT + "/daily/" + dayDate
-		});
-	</script>
+<script type="text/javascript">
+	$('#chartNav').addClass('collapse in');
+	$('#day').addClass("active");
+	var data = {{data|tojson}};
+	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 {% endblock %}

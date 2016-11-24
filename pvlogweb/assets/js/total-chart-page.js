@@ -1,25 +1,30 @@
+import {createHighchartSeries} from 'chart';
+import Gettext from 'node-gettext';
+import Highcharts from 'highcharts';
+import 'bootstrap-datepicker';
+
 $(function () {
 	var gt = new Gettext({domain: 'pvlogweb'});
 	var _ = function(msgid) { return gt.gettext(msgid); };
-	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
+	//var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
 	
 	var chartData = createHighchartSeries(data, 0);
 
-	$('#chart').highcharts({
+	Highcharts.chart('chart', {
 		title: {
-			text: _('Month Data'),
+			text: _('Year Data'),
 			x: -20 // center
 		},
 		subtitle: {
-			text: 'Pvlog',
+			text: _('Pvlog'),
 			x: -20
 		},
 		xAxis : {
 			type : 'datetime',
-			dateTimeLabelFormats : { // don't display the dummy year
-				month : '%b',
-				year : '%b'
-			},
+//			dateTimeLabelFormats : { // don't display the dummy year
+//				month : '%b',
+//				year : '%b'
+//			},
 			title : {
 				text : _('Date')
 			}
@@ -59,15 +64,13 @@ $(function () {
 				point : {
 					events : {
 						click : function() {
-							var d = new Date(this.category)
-							var year = d.getFullYear();
-							var month = String("00" + (d.getMonth() + 1)).slice(-2);
-							location.href = SCRIPT_ROOT + "/monthly/" + year + "-" + month;
+							var year = new Date(this.category).getFullYear();
+							location.href = SCRIPT_ROOT + "/yearly/" + year
 						}
 					}
 				}
 			}
 		},
-		series: chartData
+		series : chartData
 	});
 });

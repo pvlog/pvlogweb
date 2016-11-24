@@ -1,4 +1,4 @@
-function extractInverterData(inverterData) {
+export function extractInverterData(inverterData) {
 	// generate all series data
 	var data = [];
 
@@ -22,7 +22,7 @@ function extractData(data) {
 	return invData;
 }
 
-function createHighchartSeries(chartData, decimals) {
+export function createHighchartSeries(chartData, decimals) {
 	var series = [];
 
 	var invertersData = extractData(chartData);
