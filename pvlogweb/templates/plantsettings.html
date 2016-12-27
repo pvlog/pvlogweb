@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block page_title %} {{ _(Settings) }} {% endblock %}
+{% block content %}
+<div class="col-md-12">
+	<div class="row">
+		<h1 class="page-header">{{ _('Plants') }}</h1>
+		<div id="plants"></div>
+		<div id="plantsTemplate" class="panel panel-default" style="display: none">
+			<div class="panel-heading">{{ _('Plant') }}</div>
+			<div class="panel-body">
+				<div class="col-md-4">
+					<dl class="dl-horizontal">
+						<dt>{{ _('Id:') }}</dt>
+						<dd><span data-id="" class="editable" date-name="id"> </span></dd>
+						<dt>{{ _('Name:') }}</dt>
+						<dd><span data-name="" class="editable" date-name="name"></span> </dd>
+						<dt>{{ _('Connection:') }}</dt>
+						<dd><span data-connection="" class="editable" data-type="select" date-name="connection"></span> </dd>
+						<dt>{{ _('Protocol:') }}</dt>
+						<dd><span data-protocol="" class="editable" data-type="select" date-name="protocol"></span> </dd>
+						<dt>{{ _('Connection parameter:') }}</dt>
+						<dd><span data-connectionParameter="" class="editable" date-name="connectionParameter"></span> </dd>
+						<dt>{{ _('Protocol parameter:') }}</dt>
+						<dd><span data-protocolParameter="" class="editable" date-name="protocolParameter"></span></dd>
+					</dl>
+				</div>
+				<div class="col-md-8">
+					<h3>{{ _('Inverters') }}</h3>
+					<table class="table">
+						<thead>
+							<tr>
+								<th> <strong>{{ _('Id') }}</strong> </th>
+								<th> <strong>{{ _('Name') }}</strong> </th>
+								<th> <strong>{{ _('Phases') }}</strong> </th>
+								<th> <strong>{{ _('Tracker') }}</strong> </th>
+								<th> <strong>{{ _('Wattpeak') }}</strong> </th>
+								<th> <strong>{{ _('Active') }}</strong> </th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody data-inverterRows="">
+							<tr id="inverterRowTemplate" style="display: none">
+								<td><span data-id="" date-name="id" class="editable"></span></td>
+								<td><span data-name="" date-name="name" class="editable"></span></td>
+								<td><span data-phases="" date-name="phases" class="editable"></span></td>
+								<td><span data-trackers="" date-name="trackers" class="editable"></span></td>
+								<td><span data-wattpeak="" date-name="wattpeak" class="editable"></span></td>
+								<td><span data-active="" date-name="active" class="editable"></span></td>
+								<td>
+									<button type="button" class="deleteInverterButton btn btn-danger">
+										<i class="fa fa-trash-o"></i>
+										{{_('Delete Inverter')}}
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="button" class="addInverterButton btn btn-primary">Add new Inverter</button>
+					<button type="button" class="scanButton btn btn-primary">Scan for Inverters</button>
+				</div>
+				<button type="button" class="saveButton btn btn-primary">Save changes</button>
+				<button type="button" class="deletePlantButton btn btn-danger">
+					<i class="fa fa-trash-o"></i> {{_('Delete Plant')}}
+				</button>
+			</div>
+		</div>
+		<button id="addPlantButton" type="button" class="btn btn-primary">Add new Plant</button>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ javascript_tag('plantsettings') | safe }}
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script>
+	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var plants = {{ plants|tojson }};
+	var inverters = {{ inverters|tojson }};
+	var connections = {{ connections|tojson }};
+	var protocols = {{ protocols|tojson }};
+</script>
+{% endblock %}

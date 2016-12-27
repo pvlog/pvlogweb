@@ -5,6 +5,7 @@ from flask_babel import Babel
 from flask_webpack import Webpack
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
 
 babel = Babel(app)
 
@@ -43,3 +44,4 @@ from pvlogweb.data import  models
 from pvlogweb.views import test
 from pvlogweb.views import charts
 from pvlogweb.views import views
+from pvlogweb.views import admin

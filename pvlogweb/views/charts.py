@@ -3,8 +3,8 @@ from flask.templating import render_template
 from datetime import timedelta, date, datetime
 import requests
 import json
-from util import CommunicationError
-from util.util import last_day_of_month
+from pvlogweb.util import CommunicationError
+from pvlogweb.util.util import last_day_of_month
 # from math import cos
 # from pvlogweb.data.database import get_spot_values
 # from pvlogweb.data.models import *;
