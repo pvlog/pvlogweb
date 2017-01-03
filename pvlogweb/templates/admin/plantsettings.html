@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "admin/adminlayout.html" %}
 {% block page_title %} {{ _(Settings) }} {% endblock %}
 {% block content %}
 <div class="col-md-12">
@@ -39,20 +39,6 @@
 							</tr>
 						</thead>
 						<tbody data-inverterRows="">
-							<tr id="inverterRowTemplate" style="display: none">
-								<td><span data-id="" date-name="id" class="editable"></span></td>
-								<td><span data-name="" date-name="name" class="editable"></span></td>
-								<td><span data-phases="" date-name="phases" class="editable"></span></td>
-								<td><span data-trackers="" date-name="trackers" class="editable"></span></td>
-								<td><span data-wattpeak="" date-name="wattpeak" class="editable"></span></td>
-								<td><span data-active="" date-name="active" class="editable"></span></td>
-								<td>
-									<button type="button" class="deleteInverterButton btn btn-danger">
-										<i class="fa fa-trash-o"></i>
-										{{_('Delete Inverter')}}
-									</button>
-								</td>
-							</tr>
 						</tbody>
 					</table>
 					<button type="button" class="addInverterButton btn btn-primary">Add new Inverter</button>
@@ -67,10 +53,28 @@
 		<button id="addPlantButton" type="button" class="btn btn-primary">Add new Plant</button>
 	</div>
 </div>
+
+<table style="display: none">
+<tr id="inverterRowTemplate">
+	<td><span data-id="" date-name="id" class="editable"></span></td>
+	<td><span data-name="" date-name="name" class="editable"></span></td>
+	<td><span data-phases="" date-name="phases" class="editable"></span></td>
+	<td><span data-trackers="" date-name="trackers" class="editable"></span></td>
+	<td><span data-wattpeak="" date-name="wattpeak" class="editable"></span></td>
+	<td><span data-active="" date-name="active" class="editable"></span></td>
+	<td>
+		<button type="button" class="deleteInverterButton btn btn-danger">
+			<i class="fa fa-trash-o"></i>
+			{{_('Delete Inverter')}}
+		</button>
+	</td>
+</tr>
+</table>
 {% endblock %}
 {% block scripts %}
 {{ javascript_tag('plantsettings') | safe }}
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 <script>
 	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	var plants = {{ plants|tojson }};

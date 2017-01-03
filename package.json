@@ -25,6 +25,7 @@
     "image-webpack-loader": "^3.0.0",
     "install": "^0.8.2",
     "json-loader": "^0.5.4",
+    "knockout": "^3.4.1",
     "manifest-revision-webpack-plugin": "^0.3.0",
     "metismenu": "^2.5.2",
     "moment": "^2.17.0",

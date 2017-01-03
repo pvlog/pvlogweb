@@ -96,6 +96,9 @@ var chunks = {
 		plantsettings : [
 			path.join(contextRoot, assets.scripts.path, 'plantsettings-page.js')
 		].concat(common).concat(vendor_common),
+		configsettings : [
+			path.join(contextRoot, assets.scripts.path, 'configsettings-page.js')
+		].concat(common).concat(vendor_common),
 	};
 
 // Do not parse vendor files

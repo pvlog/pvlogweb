@@ -1,0 +1,33 @@
+{% extends "admin/adminlayout.html" %}
+{% block page_title %} {{ _(Settings) }} {% endblock %}
+{% block content %}
+<div class="col-md-12">
+	<div class="row">
+		<h1 class="page-header">{{ _('Configurations') }}</h1>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>{{ _('Key') }}</th>
+				<th>{{ _('Value') }}</th>
+			</tr>
+		</thead>
+		<tbody data-bind="foreach: configs">
+			<tr>
+				<td> <span data-bind="text: key"> </span> </td>
+				<td> <span  data-bind="editable: value, editableOptions: {title: 'Enter value', url: url}"></span> </td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{{ javascript_tag('configsettings') | safe }}
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<script>
+	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var configs = {{ configs|tojson }};
+</script>
+{% endblock %}
