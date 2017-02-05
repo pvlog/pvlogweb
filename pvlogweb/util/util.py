@@ -23,8 +23,9 @@ def json_rpc(url, method, params):
      
     response = requests.post(
         url, data=json.dumps(payload), headers=headers).json()
-         
-    if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
+
+    print response
+    if (response["jsonrpc"] != "2.0") or (response["id"] != 0) or "error" in response:
         raise CommunicationError(method)
     
     return response["result"]

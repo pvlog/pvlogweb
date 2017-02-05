@@ -108,7 +108,7 @@
 			if (editableOptions.save) {
 				$editable.on('save', editableOptions.save);
 			}
-			
+
 			//setup observable to fire only when editable changes, not when options change
 			//http://www.knockmeout.net/2012/06/knockoutjs-performance-gotcha-3-all-bindings.html
 			ko.computed({
@@ -136,6 +136,16 @@
 					editableOptions.visible(false);
 				});
 			}
+		},
+		
+		update: function(element, valueAccessor, allBindingsAccessor) {
+			var $element = $(element);
+			var saved = ko.unwrap(allBindingsAccessor.get("saved")); 
+			
+			if (saved) {
+				$element.removeClass('editable-unsaved');
+			}
+		
 		}
 	};
 });

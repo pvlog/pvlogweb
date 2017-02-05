@@ -59,9 +59,8 @@ def plantsettings():
 @app.route("/saveConfig", methods=['GET', 'POST'])
 def saveConfig():
     config = request.get_json()
-    print "Saving:"
-    print config
-    return jsonify(0)
+    res = json_rpc(url, "saveConfig", {"config": config});
+    return jsonify(res);
 
 @app.route("/configsettings")
 def configsettings():

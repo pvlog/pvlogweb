@@ -6,17 +6,15 @@ function Config(key, value) {
 	self.key = key;
 	self.value = value;
 
-	self.success = function() {
-		console.log('sucessm');
-	}
-
 	self.url = function(params) {
 		var d = new $.Deferred();
 		var key1 = self.key;
+		var config = {"key": key1, "value": params.value};
+		
 		$.ajax({
 			type: 'POST',
 			url: SCRIPT_ROOT + '/saveConfig',
-			data: JSON.stringify(self),
+			data: JSON.stringify(config),
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8'
 		}).done(function(result) {

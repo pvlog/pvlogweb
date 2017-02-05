@@ -1,27 +1,51 @@
 {% extends "admin/adminlayout.html" %}
 {% block page_title %} {{ _(Settings) }} {% endblock %}
 {% block content %}
+<style type="text/css">
+.paddError {
+	margin-left: 0.5em
+}
+</style>
 <div class="col-md-12">
 	<div class="row">
 		<h1 class="page-header">{{ _('Plants') }}</h1>
-		<div id="plants"></div>
-		<div id="plantsTemplate" class="panel panel-default" style="display: none">
+		<div  data-bind="foreach: plants">
+		<div class="panel panel-default">
 			<div class="panel-heading">{{ _('Plant') }}</div>
 			<div class="panel-body">
 				<div class="col-md-4">
 					<dl class="dl-horizontal">
 						<dt>{{ _('Id:') }}</dt>
-						<dd><span data-id="" class="editable" date-name="id"> </span></dd>
+						<dd>
+							<span data-bind="text: id"></span>
+						</dd>
 						<dt>{{ _('Name:') }}</dt>
-						<dd><span data-name="" class="editable" date-name="name"></span> </dd>
+						<dd>
+							<a href="#"
+								data-bind="editable: name, editableOptions: {title: '{{ _('Enter plant name') }}' }, saved: saved"></a>
+						</dd>
 						<dt>{{ _('Connection:') }}</dt>
-						<dd><span data-connection="" class="editable" data-type="select" date-name="connection"></span> </dd>
+						<dd>
+							<a href="#"
+								data-bind="editable: connection, editableOptions: {title: '{{ _('Select connection') }}',
+								type:'select', source: $root.connections}, saved: saved"></a>
+						</dd>
 						<dt>{{ _('Protocol:') }}</dt>
-						<dd><span data-protocol="" class="editable" data-type="select" date-name="protocol"></span> </dd>
+						<dd>
+							<a href="#"
+								data-bind="editable: protocol, editableOptions: {title: '{{ _('Select protocol') }}',
+								type:'select', options: $root.protocols, optionsText: 'text', optionsValue: 'value' }, saved: saved"></a>
+						</dd>
 						<dt>{{ _('Connection parameter:') }}</dt>
-						<dd><span data-connectionParameter="" class="editable" date-name="connectionParameter"></span> </dd>
+						<dd>
+							<a href="#"
+								data-bind="editable: connectionParam, editableOptions: {title: '{{ _('Enter connection parameter') }}' }, saved: saved"></a>
+						</dd>
 						<dt>{{ _('Protocol parameter:') }}</dt>
-						<dd><span data-protocolParameter="" class="editable" date-name="protocolParameter"></span></dd>
+						<dd>
+							<a href="#"
+								data-bind="editable: protocolParam, editableOptions: {title: '{{ _('Ender protocol parameter') }}' }, saved: saved"></a>
+						</dd>
 					</dl>
 				</div>
 				<div class="col-md-8">
@@ -29,47 +53,63 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th> <strong>{{ _('Id') }}</strong> </th>
-								<th> <strong>{{ _('Name') }}</strong> </th>
-								<th> <strong>{{ _('Phases') }}</strong> </th>
-								<th> <strong>{{ _('Tracker') }}</strong> </th>
-								<th> <strong>{{ _('Wattpeak') }}</strong> </th>
-								<th> <strong>{{ _('Active') }}</strong> </th>
+								<th><strong>{{ _('Id') }}</strong></th>
+								<th><strong>{{ _('Name') }}</strong></th>
+								<th><strong>{{ _('Phases') }}</strong></th>
+								<th><strong>{{ _('Tracker') }}</strong></th>
+								<th><strong>{{ _('Wattpeak') }}</strong></th>
+								<th><strong>{{ _('Active') }}</strong></th>
 								<th></th>
 							</tr>
 						</thead>
-						<tbody data-inverterRows="">
+						<tbody data-bind="foreach: inverters">
+							<tr>
+								<td><a href="#"
+									data-bind="editable: id, editableOptions: {title: '{{ _('Enter inverert id') }}' }"></a>
+								</td>
+								<td><a href="#"
+									data-bind="editable: name, editableOptions: {title: '{{ _('Enter inverter name') }}' }"></a>
+								</td>
+								<td><a href="#"
+									data-bind="editable: phases, editableOptions: {title: '{{ _('Enter number of phases') }}',
+										type:'select', options: $root.phases, optionsText: 'text', optionsValue: 'value' }"></a>
+								</td>
+								<td><a href="#"
+									data-bind="editable: trackers, editableOptions: {title: '{{ _('Enter number of trackers') }}' }"></a>
+								</td>
+								<td><a href="#"
+									data-bind="editable: wattpeak, editableOptions: {title: '{{ _('Enter wattpeak') }}' }">
+								</a></td>
+								<td><a href="#"
+									data-bind="editable: active, editableOptions: {title: '{{ _('Activate or deactivate inverter') }}',
+										type:'select', source: $root.activeStates}"></a>
+								</td>
+								<td>
+									<button data-bind="click: $parent.removeInverter" type="button"
+										class="btn btn-danger">
+										<i class="fa fa-trash-o"></i> {{_('Delete Inverter')}}
+									</button>
+								</td>
+							</tr>
 						</tbody>
 					</table>
-					<button type="button" class="addInverterButton btn btn-primary">Add new Inverter</button>
-					<button type="button" class="scanButton btn btn-primary">Scan for Inverters</button>
+					<button data-bind="click: addInverter" type="button"
+						class="btn btn-primary">Add new Inverter</button>
+					<button data-bind="click: scanForInverters" type="button"
+						class="scanButton btn btn-primary">Scan for Inverters</button>
 				</div>
-				<button type="button" class="saveButton btn btn-primary">Save changes</button>
-				<button type="button" class="deletePlantButton btn btn-danger">
+				<button data-bind="click: save" type="button"
+					class="btn btn-primary">{{ _('Save changes') }}</button>
+				<button data-bind="click: $parent.removePlant" type="button"
+					class="btn btn-danger">
 					<i class="fa fa-trash-o"></i> {{_('Delete Plant')}}
 				</button>
 			</div>
 		</div>
-		<button id="addPlantButton" type="button" class="btn btn-primary">Add new Plant</button>
+		</div>
+		<button data-bind="click: addPlant" type="button" class="btn btn-primary">Add new Plant</button>
 	</div>
 </div>
-
-<table style="display: none">
-<tr id="inverterRowTemplate">
-	<td><span data-id="" date-name="id" class="editable"></span></td>
-	<td><span data-name="" date-name="name" class="editable"></span></td>
-	<td><span data-phases="" date-name="phases" class="editable"></span></td>
-	<td><span data-trackers="" date-name="trackers" class="editable"></span></td>
-	<td><span data-wattpeak="" date-name="wattpeak" class="editable"></span></td>
-	<td><span data-active="" date-name="active" class="editable"></span></td>
-	<td>
-		<button type="button" class="deleteInverterButton btn btn-danger">
-			<i class="fa fa-trash-o"></i>
-			{{_('Delete Inverter')}}
-		</button>
-	</td>
-</tr>
-</table>
 {% endblock %}
 {% block scripts %}
 {{ javascript_tag('plantsettings') | safe }}
