@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "public/layout.html" %}
 {% block page_title %} Month Output for {{ current }} {% endblock %}
 {% block content %}
 <div class="lg-12">
@@ -10,11 +10,11 @@
 	<h1 class="page-header">Year Power Production</h1>
 	<div class="panel panel-default">
 				<div class="panel-heading">
-					<a class="btn btn-default" href="{{ url_for('yearly', date_string=before) }}">
+					<a class="btn btn-default" href="{{ url_for('.yearly', date_string=before) }}">
 						<i class="fa fa-angle-left"></i>
 					</a> 
 					<button type="button" class="btn btn-default"  id="datepicker"> Solar Data for {{ current }}</button>
-					<a class="btn btn-default" href="{{ url_for('yearly', date_string=after) }}">
+					<a class="btn btn-default" href="{{ url_for('.yearly', date_string=after) }}">
 						<i class="fa fa-angle-right"></i>
 					</a>
 				</div>

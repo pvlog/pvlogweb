@@ -40,8 +40,15 @@ LANGUAGES = {
 # assets.config['babel_presets'] = 'es2015'
 #assets.config['babel_extra_args'] = ['--plugins', 'transform-es2015-modules-systemjs']
 
-from pvlogweb.data import  models
-from pvlogweb.views import test
-from pvlogweb.views import charts
-from pvlogweb.views import views
-from pvlogweb.views import admin
+from admin.views import admin
+app.register_blueprint(admin, url_prefix='/admin')
+
+from public.views import public
+app.register_blueprint(public)
+
+#from pvlogweb.data import  models
+#from pvlogweb.public import test
+#from pvlogweb.public import charts
+#from pvlogweb.public import views
+
+
