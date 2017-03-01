@@ -8,8 +8,26 @@
 </style>
 <div class="col-md-12">
 	<div class="row">
+		Datalogger Status:
+		<div data-bind="if: isDataloggerRunning()">
+			<span data-bind="if: isDataloggerRunning">Running</span>
+			<button data-bind="click: stopDatalogger" type="button"
+				class="btn btn-default btn-xs" data-toggle="tooltip" title="{{ _('Pause Datalogger') }}">
+				<span class="glyphicon glyphicon-pause"></span>
+			</button>
+		</div>
+		<div data-bind="if: !isDataloggerRunning()">
+			<span>Stopped</span>
+			<button data-bind="click: startDatalogger" type="button"
+				class="btn btn-default btn-xs"  data-toggle="tooltip" title="{{ _('Start Datalogger') }}">
+				<span class="glyphicon glyphicon-play"></span>
+			</button>
+		</div>
+	</div>
+
+	<div class="row">
 		<h1 class="page-header">{{ _('Plants') }}</h1>
-		<div  data-bind="foreach: plants">
+		<div data-bind="foreach: plants">
 		<div class="panel panel-default">
 			<div class="panel-heading">{{ _('Plant') }}</div>
 			<div class="panel-body">
@@ -85,7 +103,7 @@
 										type:'select', source: $root.activeStates}"></a>
 								</td>
 								<td>
-									<button data-bind="click: $parent.removeInverter" type="button"
+									<button data-bind="click: $parent.deleteInverter" type="button"
 										class="btn btn-danger">
 										<i class="fa fa-trash-o"></i> {{_('Delete Inverter')}}
 									</button>
@@ -100,14 +118,14 @@
 				</div>
 				<button data-bind="click: save" type="button"
 					class="btn btn-primary">{{ _('Save changes') }}</button>
-				<button data-bind="click: $parent.removePlant" type="button"
+				<button data-bind="click: $parent.deletePlant" type="button"
 					class="btn btn-danger">
 					<i class="fa fa-trash-o"></i> {{_('Delete Plant')}}
 				</button>
 			</div>
 		</div>
 		</div>
-		<button data-bind="click: addPlant" type="button" class="btn btn-primary">Add new Plant</button>
+		<button data-bind="click: addPlant" type="button" class="btn btn-primary">{{_('Add new Plant')}}</button>
 	</div>
 </div>
 {% endblock %}
@@ -121,5 +139,6 @@
 	var inverters = {{ inverters|tojson }};
 	var connections = {{ connections|tojson }};
 	var protocols = {{ protocols|tojson }};
+	var isDataloggerRunning = {{ isDataloggerRunning|tojson }};
 </script>
 {% endblock %}

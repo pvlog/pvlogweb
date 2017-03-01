@@ -17,10 +17,13 @@ def get_inverters():
     return jsonify(result);
 
 
-@app.route('/scanForInverters')
+@app.route('/scanForInverters', methods=['GET', 'POST'])
 def scan_for_inverters():
     plant = request.get_json()
-    inverters = json_rpc(url, "scanForInverters", {plant})
+    print "plant:"
+    print plant
+
+    inverters = json_rpc(url, "scanForInverters", {"plant": plant})
     return jsonify(inverters);
 
 
@@ -34,6 +37,13 @@ def save_plant():
     #return jsonify(result);
 
 
+@app.route('/deletePlant', methods=['GET', 'POST'])
+def delete_plant():
+    plantId = request.get_json()
+    result = json_rpc(url, "deletePlant", {plantId})
+    return jsonify(result);
+
+
 @app.route('/saveInverter', methods=['GET', 'POST'])
 def save_inverter():
     inverter = request.get_json()
@@ -44,7 +54,21 @@ def save_inverter():
     #jsonify(result);
 
 
+@app.route('/deleteInverter', methods=['GET', 'POST'])
+def delete_inverter():
+    inverterId = request.get_json()
+    result = json_rpc(url, "deleteInverter", {inverterId})
+    return jsonify(result);
 
+@app.route('/stopDatalogger', methods=['GET', 'POST'])
+def stop_inverter():
+    json_rpc(url, "stopDatalogger", {}, True)
+    return jsonify({})
+
+@app.route('/startDatalogger', methods=['GET', 'POST'])
+def start_inverter():
+    json_rpc(url, "startDatalogger", {}, True)
+    return jsonify({})
 
 @app.route("/plantsettings")
 def plantsettings():
@@ -52,8 +76,9 @@ def plantsettings():
     inverters = json_rpc(url, "getInverters", {})
     connections = json_rpc(url, "getSupportedConnections", {})
     protocols = json_rpc(url, "getSupportedProtocols",{})
+    isDataloggerRunning = json_rpc(url, "isDataloggerRunning",{})
     return render_template("admin/plantsettings.html", plants=plants, inverters=inverters,
-                           connections=connections, protocols=protocols)
+                           connections=connections, protocols=protocols, isDataloggerRunning=isDataloggerRunning)
 
 
 @app.route("/saveConfig", methods=['GET', 'POST'])
