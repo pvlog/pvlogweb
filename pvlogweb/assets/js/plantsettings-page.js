@@ -3,7 +3,7 @@ import 'knockout.x-editable';
 import 'knockout.validation';
 import 'bootstrap-notify'
 import * as ko from 'knockout';
-//import * as v from 'valib';
+import {getJson} from 'jsonhelper';
 
 var gt = new Gettext({domain: 'pvlogweb'});
 var _ = function(msgid) { return gt.gettext(msgid); };
@@ -26,35 +26,6 @@ ko.extenders.numeric = function(target, precision) {
 
 	return result;
 };
-
-//ko.extenders.numeric = function(target, precision) {
-//    //create a writable computed observable to intercept writes to our observable
-//    var result = ko.pureComputed({
-//        read: target,  //always return the original observables value
-//        write: function(newValue) {
-//            var current = target(),
-//                roundingMultiplier = Math.pow(10, precision),
-//                newValueAsNum = isNaN(newValue) ? 0 : +newValue,
-//                valueToWrite = Math.round(newValueAsNum * roundingMultiplier) / roundingMultiplier;
-// 
-//            //only write if it changed
-//            if (valueToWrite !== current) {
-//                target(valueToWrite);
-//            } else {
-//                //if the rounded value is the same, but a different value was written, force a notification for the current field
-//                if (newValue !== current) {
-//                    target.notifySubscribers(valueToWrite);
-//                }
-//            }
-//        }
-//    }).extend({ notify: 'always' });
-// 
-//    //initialize with current value to make sure it is rounded appropriately
-//    result(target());
-// 
-//    //return the new computed observable
-//    return result;
-//};
 
 function Inverter(inverterData) {
 	var self = this;
@@ -118,98 +89,17 @@ function Plant(plantData, isDataloggerRunning) {
 			return;
 		}
 
-		$.ajax({
-			type: 'POST',
-			url: SCRIPT_ROOT + '/savePlant',
-			data: ko.toJSON(self),
-			dataType: 'json',
-			contentType: 'application/json; charset=utf-8'
-		}).done(function(result) {
-			if (result.error != null) {
-				$.notify({
-					message: result.error.message
-				},{
-					type: 'danger'
-				});
-			} else {
-				self.id(result.id);
-				
-				$.notify({
-					message: 'Successfully saved plant ' + self.name() + '!'
-				},{
-					type: 'sucess'
-				});
-				
-				for (let inverter of self.inverters()) {
-					inverter.plantId(self.id());
-					$.ajax({
-						type: 'POST',
-						url: SCRIPT_ROOT + '/saveInverter',
-						data: ko.toJSON(inverter),
-						dataType: 'json',
-						contentType: 'application/json; charset=utf-8'
-					}).done(function(result) {
-						if (result.error != null) {
-							$.notify({
-								message: result.error.message
-							},{
-								type: 'danger'
-							});
-						} else {
-							$.notify({
-								message: 'Successfully saved inverter' + inverter.name() + '!'
-							},{
-								type: 'sucess'
-							});
-						}
-					}).fail(function(jqXHR, textStatus) {
-						$.notify({
-							message: 'Ajax error'
-						},{
-							type: 'danger'
-						});
-					});
-				}
+		getJson(SCRIPT_ROOT + '/savePlant', ko.toJSON(self), function(result) {
+			self.id(result.id);
+			$.notify({message: 'Successfully saved plant ' + self.name() + '!'}, {type: 'sucess'});
 
+			for (let inverter of self.inverters()) {
+				inverter.plantId(self.id());
+				getJson(SCRIPT_ROOT + '/saveInverter', ko.toJSON(inverter), function(result) {
+					$.notify({message: 'Successfully saved inverter' + inverter.name() + '!'}, {type: 'sucess'});
+				});
 			}
-			
-		}).fail(function(jqXHR, textStatus) {
-			$.notify({
-				message: 'Ajax error'
-			},{
-				type: 'danger'
-			});
 		});
-		
-//		for (let inverter of self.inverters()) {
-//			$.ajax({
-//				type: 'POST',
-//				url: SCRIPT_ROOT + '/saveInverter',
-//				data: ko.toJSON(inverter),
-//				dataType: 'json',
-//				contentType: 'application/json; charset=utf-8'
-//			}).done(function(result) {
-//				if (result.error != null) {
-//					$.notify({
-//						message: result.error.message
-//					},{
-//						type: 'danger'
-//					});
-//				} else {
-//					$.notify({
-//						message: 'Successfully saved inverter' + inverter.name() + '!'
-//					},{
-//						type: 'sucess'
-//					});
-//				}
-//			}).fail(function(jqXHR, textStatus) {
-//				$.notify({
-//					message: 'Ajax error'
-//				},{
-//					type: 'danger'
-//				});
-//			});
-//		}
 
 		self.saved(true);
 		self.saved(false);
@@ -221,28 +111,8 @@ function Plant(plantData, isDataloggerRunning) {
 			return;
 		}
 
-		$.ajax({
-			type: 'POST',
-			url: SCRIPT_ROOT + '/deleteInverter',
-			data: JSON.stringify({"inverterId": String(inverter.id())}),
-			dataType: 'json',
-			contentType: 'application/json; charset=utf-8'
-		}).done(function(result) {
-			if (result.error != null) {
-				$.notify({
-					message: result.error.message
-				},{
-					type: 'danger'
-				});
-			} else {
-				self.inverters.remove(inverter);
-			}
-		}).fail(function(jqXHR, textStatus) {
-			$.notify({
-				message: 'Ajax error'
-			},{
-				type: 'danger'
-			});
+		getJson(SCRIPT_ROOT + '/deleteInverter', JSON.stringify({"inverterId": String(inverter.id())}), function(result) {
+			self.inverters.remove(inverter);
 		});
 	}
 	
@@ -262,41 +132,17 @@ function Plant(plantData, isDataloggerRunning) {
 	
 	self.scanForInverters = function() {
 		if (isDataloggerRunning()) {
-			$.notify({
-				message: 'You need to stop the datelogger before scanning for inverters!'
-			},{
-				type: 'danger'
-			});
+			$.notify({message: 'You need to stop the datelogger before scanning for inverters!'}, {type: 'danger'});
 			return;
 		}
 
-		$.ajax({
-			type: 'POST',
-			url: SCRIPT_ROOT + '/scanForInverters',
-			data: ko.toJSON(self),
-			dataType: 'json',
-			contentType: 'application/json; charset=utf-8'
-		}).done(function(result) {
-			if (result.error != null) {
-				$.notify({
-					message: result.error.message
-				},{
-					type: 'danger'
-				});
-			} else {
-				for (let inverter of result) {
-					if (!self.isInverterAvailable(inverter.id)) {
-						let inv = new Inverter(inverter);
-						self.inverters.push(inv);
-					}
+		getJson(SCRIPT_ROOT + '/scanForInverters', ko.toJSON(self), function(result) {
+			for (let inverter of result) {
+				if (!self.isInverterAvailable(inverter.id)) {
+					let inv = new Inverter(inverter);
+					self.inverters.push(inv);
 				}
 			}
-		}).fail(function(jqXHR, textStatus) {
-			$.notify({
-				message: 'Ajax error'
-			},{
-				type: 'danger'
-			});
 		});
 	}
 }
@@ -347,28 +193,8 @@ function PlantListModel(plantsData, invertersData, connections, protocols) {
 			return;
 		}
 
-		$.ajax({
-			type: 'POST',
-			url: SCRIPT_ROOT + '/deletePlant',
-			data: JSON.stringify({"plantId": String(plant.id())}),
-			dataType: 'json',
-			contentType: 'application/json; charset=utf-8'
-		}).done(function(result) {
-			if (result.error != null) {
-				$.notify({
-					message: result.error.message
-				},{
-					type: 'danger'
-				});
-			} else {
-				self.plants.remove(plant);
-			}
-		}).fail(function(jqXHR, textStatus) {
-			$.notify({
-				message: 'Ajax error'
-			},{
-				type: 'danger'
-			});
+		getJson(SCRIPT_ROOT + '/deletePlant', JSON.stringify({"plantId": String(plant.id())}), function(result) {
+			self.plants.remove(plant);
 		});
 	}
 
@@ -381,20 +207,8 @@ function PlantListModel(plantsData, invertersData, connections, protocols) {
 			return;
 		}
 
-		$.ajax({
-			type: 'POST',
-			url: SCRIPT_ROOT + '/startDatalogger',
-			//data: JSON.stringify(self),
-			//dataType: 'json',
-			contentType: 'application/json; charset=utf-8'
-		}).done(function(result) {
-			if (result.error == null) {
-				self.isDataloggerRunning(true);
-			} else {
-				//growl error
-			}
-		}).fail(function(jqXHR, textStatus) {
-			//growl error
+		getJson(SCRIPT_ROOT + '/startDatalogger', {}, function(result) {
+			self.isDataloggerRunning(true);
 		});
 	}
 
@@ -403,20 +217,8 @@ function PlantListModel(plantsData, invertersData, connections, protocols) {
 			return;
 		}
 
-		$.ajax({
-			type: 'POST',
-			url: SCRIPT_ROOT + '/stopDatalogger',
-			//data: JSON.stringify(self),
-			//dataType: 'json',
-			contentType: 'application/json; charset=utf-8'
-		}).done(function(result) {
-			if (result.error == null) {
-				self.isDataloggerRunning(false);
-			} else {
-				//growl error
-			}
-		}).fail(function(jqXHR, textStatus) {
-			//growl error
+		getJson(SCRIPT_ROOT + '/stopDatalogger', {}, function(result) {
+			self.isDataloggerRunning(false);
 		});
 	}
 }
