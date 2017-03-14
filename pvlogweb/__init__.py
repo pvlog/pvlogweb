@@ -3,6 +3,7 @@ from pvlogweb.converters.DateConverter import DateConverter
 #from webassets.filter import get_filter
 from flask_babel import Babel
 from flask_webpack import Webpack
+from flask_session import Session
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -19,6 +20,10 @@ app.config.update(params)
 
 webpack = Webpack()
 webpack.init_app(app)
+
+# Check Configuration section for more details
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 LANGUAGES = {
     'en': 'English',

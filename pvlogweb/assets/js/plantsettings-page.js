@@ -8,12 +8,61 @@ import * as ko from 'knockout';
 var gt = new Gettext({domain: 'pvlogweb'});
 var _ = function(msgid) { return gt.gettext(msgid); };
 
+ko.extenders.numeric = function(target, precision) {
+	var result = ko.pureComputed({
+		read: target,
+		write: function(newValue) {
+			var valueToWrite;
+			if (newValue == null || isNaN(newValue)) {
+				valueToWrite = newValue;
+			} else {
+				valueToWrite = Number(newValue);
+			}
+			target(valueToWrite);
+		}
+	}).extend({ notify: 'always' });
+
+	result(target());
+
+	return result;
+};
+
+//ko.extenders.numeric = function(target, precision) {
+//    //create a writable computed observable to intercept writes to our observable
+//    var result = ko.pureComputed({
+//        read: target,  //always return the original observables value
+//        write: function(newValue) {
+//            var current = target(),
+//                roundingMultiplier = Math.pow(10, precision),
+//                newValueAsNum = isNaN(newValue) ? 0 : +newValue,
+//                valueToWrite = Math.round(newValueAsNum * roundingMultiplier) / roundingMultiplier;
+// 
+//            //only write if it changed
+//            if (valueToWrite !== current) {
+//                target(valueToWrite);
+//            } else {
+//                //if the rounded value is the same, but a different value was written, force a notification for the current field
+//                if (newValue !== current) {
+//                    target.notifySubscribers(valueToWrite);
+//                }
+//            }
+//        }
+//    }).extend({ notify: 'always' });
+// 
+//    //initialize with current value to make sure it is rounded appropriately
+//    result(target());
+// 
+//    //return the new computed observable
+//    return result;
+//};
+
 function Inverter(inverterData) {
 	var self = this;
 	
 	if (inverterData == null) {
 		inverterData = {};
 		inverterData.id       = null;
+		inverterData.plantId  = null;
 		inverterData.name     = null;
 		inverterData.wattpeak = null;
 		inverterData.phases   = null;
@@ -22,11 +71,12 @@ function Inverter(inverterData) {
 	
 	}
 	
-	self.id       = ko.observable(inverterData.id).extend({number: true, required: true});
+	self.id       = ko.observable(inverterData.id).extend({number: true, required: true, numeric: true});
+	self.plantId  = ko.observable(inverterData.plantId);
 	self.name     = ko.observable(inverterData.name).extend({required: true});
-	self.wattpeak = ko.observable(inverterData.wattpeak).extend({number: true, required: true});
-	self.phases   = ko.observable(inverterData.phases).extend({required: true, required: true});
-	self.trackers = ko.observable(inverterData.trackers).extend({required: true, required: true});
+	self.wattpeak = ko.observable(inverterData.wattpeak).extend({number: true, required: true, numeric: true});
+	self.phases   = ko.observable(inverterData.phases).extend({required: true, required: true, numeric: true});
+	self.trackers = ko.observable(inverterData.trackers).extend({required: true, required: true, numeric: true});
 	self.active   = 1;
 }
 
@@ -60,7 +110,7 @@ function Plant(plantData, isDataloggerRunning) {
 		
 		ko.validation.group(self).showAllMessages();
 		self.inverters().forEach(function(v,i) {
-			isValidI = isValid && ko.validatedObservable(v).isValid();
+			isValid = isValid && ko.validatedObservable(v).isValid();
 			ko.validation.group(v).showAllMessages();
 		});
 		
@@ -71,7 +121,7 @@ function Plant(plantData, isDataloggerRunning) {
 		$.ajax({
 			type: 'POST',
 			url: SCRIPT_ROOT + '/savePlant',
-			data: JSON.stringify(self),
+			data: ko.toJSON(self),
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8'
 		}).done(function(result) {
@@ -82,12 +132,47 @@ function Plant(plantData, isDataloggerRunning) {
 					type: 'danger'
 				});
 			} else {
+				self.id(result.id);
+				
 				$.notify({
-					message: 'Successfully saved data!'
+					message: 'Successfully saved plant ' + self.name() + '!'
 				},{
 					type: 'sucess'
 				});
+				
+				for (let inverter of self.inverters()) {
+					inverter.plantId(self.id());
+					$.ajax({
+						type: 'POST',
+						url: SCRIPT_ROOT + '/saveInverter',
+						data: ko.toJSON(inverter),
+						dataType: 'json',
+						contentType: 'application/json; charset=utf-8'
+					}).done(function(result) {
+						if (result.error != null) {
+							$.notify({
+								message: result.error.message
+							},{
+								type: 'danger'
+							});
+						} else {
+							$.notify({
+								message: 'Successfully saved inverter' + inverter.name() + '!'
+							},{
+								type: 'sucess'
+							});
+						}
+					}).fail(function(jqXHR, textStatus) {
+						$.notify({
+							message: 'Ajax error'
+						},{
+							type: 'danger'
+						});
+					});
+				}
+
 			}
+			
 		}).fail(function(jqXHR, textStatus) {
 			$.notify({
 				message: 'Ajax error'
@@ -95,6 +180,36 @@ function Plant(plantData, isDataloggerRunning) {
 				type: 'danger'
 			});
 		});
+		
+//		for (let inverter of self.inverters()) {
+//			$.ajax({
+//				type: 'POST',
+//				url: SCRIPT_ROOT + '/saveInverter',
+//				data: ko.toJSON(inverter),
+//				dataType: 'json',
+//				contentType: 'application/json; charset=utf-8'
+//			}).done(function(result) {
+//				if (result.error != null) {
+//					$.notify({
+//						message: result.error.message
+//					},{
+//						type: 'danger'
+//					});
+//				} else {
+//					$.notify({
+//						message: 'Successfully saved inverter' + inverter.name() + '!'
+//					},{
+//						type: 'sucess'
+//					});
+//				}
+//			}).fail(function(jqXHR, textStatus) {
+//				$.notify({
+//					message: 'Ajax error'
+//				},{
+//					type: 'danger'
+//				});
+//			});
+//		}
 
 		self.saved(true);
 		self.saved(false);
@@ -109,7 +224,7 @@ function Plant(plantData, isDataloggerRunning) {
 		$.ajax({
 			type: 'POST',
 			url: SCRIPT_ROOT + '/deleteInverter',
-			data: JSON.stringify(inverter.id),
+			data: JSON.stringify({"inverterId": String(inverter.id())}),
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8'
 		}).done(function(result) {
@@ -133,6 +248,16 @@ function Plant(plantData, isDataloggerRunning) {
 	
 	self.addInverter = function() {
 		self.inverters.push(new Inverter(null));
+	}
+	
+	self.isInverterAvailable = function(inverterId) {
+		for (inverter of self.inverters()) {
+			if (inverter.id() == inverterId) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	self.scanForInverters = function() {
@@ -159,10 +284,10 @@ function Plant(plantData, isDataloggerRunning) {
 					type: 'danger'
 				});
 			} else {
-				for (let inverter in result) {
-					if (!available(inverter.id)) {
+				for (let inverter of result) {
+					if (!self.isInverterAvailable(inverter.id)) {
 						let inv = new Inverter(inverter);
-						inverters.push(inv);
+						self.inverters.push(inv);
 					}
 				}
 			}
@@ -225,7 +350,7 @@ function PlantListModel(plantsData, invertersData, connections, protocols) {
 		$.ajax({
 			type: 'POST',
 			url: SCRIPT_ROOT + '/deletePlant',
-			data: JSON.stringify(plant.id),
+			data: JSON.stringify({"plantId": String(plant.id())}),
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8'
 		}).done(function(result) {

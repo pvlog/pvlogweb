@@ -99,6 +99,9 @@ var chunks = {
 		configsettings : [
 			path.join(contextRoot, assets.scripts.path, 'configsettings-page.js')
 		].concat(common).concat(vendor_common),
+		emailsettings : [
+			path.join(contextRoot, assets.scripts.path, 'emailsettings-page.js')
+		].concat(common).concat(vendor_common),
 	};
 
 // Do not parse vendor files
