@@ -1,0 +1,225 @@
+# German translations for PROJECT.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-03-20 14:15+0100\n"
+"PO-Revision-Date: 2017-03-20 14:23+0100\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.4\n"
+"Last-Translator: \n"
+"X-Generator: Poedit 1.8.9\n"
+
+#: pvlogweb/static/js/events.js:22
+msgid "Inverter"
+msgstr ""
+
+#: pvlogweb/static/js/events.js:23
+msgid "Time"
+msgstr "Zeit"
+
+#: pvlogweb/static/js/events.js:24
+msgid "Number"
+msgstr "Numer"
+
+#: pvlogweb/static/js/events.js:25
+msgid "Message"
+msgstr "Nachrichten"
+
+#: pvlogweb/templates/admin/configsettings.html:6
+msgid "Configurations"
+msgstr "Einstellungen"
+
+#: pvlogweb/templates/admin/configsettings.html:11
+msgid "Key"
+msgstr "Schlüssel"
+
+#: pvlogweb/templates/admin/configsettings.html:12
+msgid "Value"
+msgstr "Wert"
+
+#: pvlogweb/templates/admin/emailsettings.html:6
+msgid "Email Settings"
+msgstr "Email Einstellungen"
+
+#: pvlogweb/templates/admin/emailsettings.html:8
+msgid "Email Server Configuration"
+msgstr "Email Server Einstellung"
+
+#: pvlogweb/templates/admin/emailsettings.html:12
+msgid "Smtp Server"
+msgstr ""
+
+#: pvlogweb/templates/admin/emailsettings.html:19
+msgid "Smtp Server Port"
+msgstr ""
+
+#: pvlogweb/templates/admin/emailsettings.html:26
+msgid "User"
+msgstr "Benutzer"
+
+#: pvlogweb/templates/admin/emailsettings.html:33
+msgid "Password"
+msgstr "Passwort"
+
+#: pvlogweb/templates/admin/emailsettings.html:41
+#: pvlogweb/templates/admin/emailsettings.html:60
+msgid "Submit"
+msgstr ""
+
+#: pvlogweb/templates/admin/emailsettings.html:48
+msgid "Email"
+msgstr ""
+
+#: pvlogweb/templates/admin/emailsettings.html:52
+msgid "Email Address"
+msgstr "Email Adresse"
+
+#: pvlogweb/templates/admin/emailsettings.html:66
+msgid "Send Test-Email"
+msgstr "Schicke Test Nachricht"
+
+#: pvlogweb/templates/admin/plantsettings.html:15
+msgid "Pause Datalogger"
+msgstr "Pausiere Datenlogger"
+
+#: pvlogweb/templates/admin/plantsettings.html:22
+msgid "Start Datalogger"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:29
+msgid "Plants"
+msgstr "Anlagen"
+
+#: pvlogweb/templates/admin/plantsettings.html:32
+msgid "Plant"
+msgstr "Anlage"
+
+#: pvlogweb/templates/admin/plantsettings.html:36
+msgid "Id:"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:40
+msgid "Name:"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:43
+msgid "Enter plant name"
+msgstr "Enter Anlage Name"
+
+#: pvlogweb/templates/admin/plantsettings.html:45
+msgid "Connection:"
+msgstr "Verbindung"
+
+#: pvlogweb/templates/admin/plantsettings.html:48
+msgid "Select connection"
+msgstr "Wähle Verbindung"
+
+#: pvlogweb/templates/admin/plantsettings.html:51
+msgid "Protocol:"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:54
+msgid "Select protocol"
+msgstr "Wähle Protocol"
+
+#: pvlogweb/templates/admin/plantsettings.html:57
+msgid "Connection parameter:"
+msgstr "Verbindungs Parameter"
+
+#: pvlogweb/templates/admin/plantsettings.html:60
+msgid "Enter connection parameter"
+msgstr "Enter Verbindungs Parameter"
+
+#: pvlogweb/templates/admin/plantsettings.html:62
+msgid "Protocol parameter:"
+msgstr "Protocol Parameter"
+
+#: pvlogweb/templates/admin/plantsettings.html:65
+msgid "Ender protocol parameter"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:70
+msgid "Inverters"
+msgstr "Wechselrichter"
+
+#: pvlogweb/templates/admin/plantsettings.html:74
+msgid "Id"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:75
+msgid "Name"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:76
+msgid "Phases"
+msgstr "Phasen"
+
+#: pvlogweb/templates/admin/plantsettings.html:77
+msgid "Tracker"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:78
+msgid "Wattpeak"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:79
+msgid "Active"
+msgstr "Aktiv"
+
+#: pvlogweb/templates/admin/plantsettings.html:86
+msgid "Enter inverert id"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:89
+msgid "Enter inverter name"
+msgstr "Wnter Wechselricher Id"
+
+#: pvlogweb/templates/admin/plantsettings.html:92
+msgid "Enter number of phases"
+msgstr "Enter Anzahl Phasen"
+
+#: pvlogweb/templates/admin/plantsettings.html:96
+msgid "Enter number of trackers"
+msgstr "Enter Anzahl Tracker"
+
+#: pvlogweb/templates/admin/plantsettings.html:99
+msgid "Enter wattpeak"
+msgstr ""
+
+#: pvlogweb/templates/admin/plantsettings.html:102
+msgid "Activate or deactivate inverter"
+msgstr "Aktiviere oder deaktiviere Wechselrichter"
+
+#: pvlogweb/templates/admin/plantsettings.html:108
+msgid "Delete Inverter"
+msgstr "Lösche Wechselrichter"
+
+#: pvlogweb/templates/admin/plantsettings.html:120
+msgid "Save changes"
+msgstr "Speichere Änderungen"
+
+#: pvlogweb/templates/admin/plantsettings.html:123
+msgid "Delete Plant"
+msgstr "Lösche Anlage"
+
+#: pvlogweb/templates/admin/plantsettings.html:128
+msgid "Add new Plant"
+msgstr "Fühe Anlage hinzu"
+
+#: pvlogweb/templates/public/about.html:6
+msgid "is a web interface for pvlog"
+msgstr "ist ein Web-Interface für Pvlog"
+
+#: pvlogweb/templates/public/charts/monthly.html:10
+msgid "Month Power Production"
+msgstr "Monats Energie Produktion"

@@ -1,49 +1,20 @@
-from flask import Flask
-from pvlogweb.converters.DateConverter import DateConverter
+from flask import Flask, request, send_from_directory
 #from webassets.filter import get_filter
 from flask_babel import Babel
-from flask_webpack import Webpack
 from flask_session import Session
+from flask_webpack import Webpack
+
+from pvlogweb.converters.DateConverter import DateConverter
+
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config.from_object("config")
 
 babel = Babel(app)
+session = Session(app)
+webpack = Webpack(app)
 
 app.url_map.converters['date_converter'] = DateConverter
-
-params = {
-    'DEBUG': True,
-    'WEBPACK_MANIFEST_PATH': '../build/manifest.json'
-}
-app.config.update(params)
-
-webpack = Webpack()
-webpack.init_app(app)
-
-# Check Configuration section for more details
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
-
-LANGUAGES = {
-    'en': 'English',
-    'de': 'Deutsch'
-}
-
-# @babel.localeselector
-# def get_locale():
-#     return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
-
-
-# assets = Environment(app)
-# 
-# assets.debug = True
-# assets.config['babel_run_in_debug'] = False
-# 
-# assets.auto_build = True
-# 
-# assets.config['babel_presets'] = 'es2015'
-#assets.config['babel_extra_args'] = ['--plugins', 'transform-es2015-modules-systemjs']
 
 from admin.views import admin
 app.register_blueprint(admin, url_prefix='/admin')
@@ -51,9 +22,12 @@ app.register_blueprint(admin, url_prefix='/admin')
 from public.views import public
 app.register_blueprint(public)
 
-#from pvlogweb.data import  models
-#from pvlogweb.public import test
-#from pvlogweb.public import charts
-#from pvlogweb.public import views
+@app.route("/assets/<path:filename>")
+def send_asset(filename):
+    return send_from_directory("../assets/public", filename)
+
+@babel.localeselector
+def get_locale():
+     return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
 
 

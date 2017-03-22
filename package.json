@@ -4,8 +4,9 @@
   "description": "Pvlog web interface",
   "main": "config.js",
   "scripts": {
-    "start": "node_modules/.bin/webpack-dev-server --config webpack.config.js --progress --colors --port 2992 --content-base build/public",
-    "build": "node_modules/.bin/webpack --config webpack.config.js --progress --profile --colors"
+    "start": "webpack-dev-server -d --config webpack.config.js --progress --colors --port 2992 --content-base build/public",
+    "build": "webpack -d --config webpack.config.js --progress --profile --colors",
+    "build-production": "PUBLIC_PATH='/assets/' webpack --config webpack.config.js -p --progress --profile --colors"
   },
   "author": "",
   "license": "ISC",

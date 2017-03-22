@@ -16,6 +16,9 @@ var node_env = process.env.NODE_ENV || 'development';
 //dev server configuration
 var publicPath = process.env.PUBLIC_PATH || 'http://localhost:2992/assets/';
 
+console.log(process.env.PUBLIC_PATH)
+console.log(publicPath)
+
 //Project root
 var context = path.join(__dirname, '.');
 
@@ -27,7 +30,7 @@ var contextRoot = path.join(context, rootAssetPath);
 var languages = /en|de/;
 
 //build output location
-var buildOutputPath = './build/public';
+var buildOutputPath = './assets/public';
 
 //Assets configuration
 var assets = {
@@ -118,8 +121,6 @@ function isExternal(module) {
 		return false;
 	}
 	
-	console.log(userRequest.indexOf('node_modules') >= 0);
-
 	return userRequest.indexOf('bower_components') >= 0
 			|| userRequest.indexOf('node_modules') >= 0
 			|| userRequest.indexOf('libraries') >= 0;
@@ -153,7 +154,7 @@ var plugins = [
 
 	//new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, languages),
 
-	new ManifestRevisionPlugin(path.join('build', 'manifest.json'), {
+	new ManifestRevisionPlugin(path.join('assets', 'manifest.json'), {
 		rootAssetPath: rootAssetPath,
 		ignorePaths: ['/fonts', '/styles', '/scripts']
 	})
