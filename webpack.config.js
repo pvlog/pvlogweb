@@ -14,10 +14,7 @@ var VendorChunkPlugin = require('webpack-vendor-chunk-plugin');
 var node_env = process.env.NODE_ENV || 'development';
 
 //dev server configuration
-var publicPath = process.env.PUBLIC_PATH || 'http://localhost:2992/assets/';
-
-console.log(process.env.PUBLIC_PATH)
-console.log(publicPath)
+var publicPath = process.env.PUBLIC_PATH || 'http://localhost:2992/static/';
 
 //Project root
 var context = path.join(__dirname, '.');
@@ -30,7 +27,7 @@ var contextRoot = path.join(context, rootAssetPath);
 var languages = /en|de/;
 
 //build output location
-var buildOutputPath = './assets/public';
+var buildOutputPath = './static';
 
 //Assets configuration
 var assets = {
@@ -154,7 +151,7 @@ var plugins = [
 
 	//new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, languages),
 
-	new ManifestRevisionPlugin(path.join('assets', 'manifest.json'), {
+	new ManifestRevisionPlugin(path.join('./', 'manifest.json'), {
 		rootAssetPath: rootAssetPath,
 		ignorePaths: ['/fonts', '/styles', '/scripts']
 	})

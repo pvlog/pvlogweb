@@ -1,7 +1,8 @@
-include assets/manifest.json
+include manifest.json
 
 include config.py
 include runserver.py
+include pvlogweb.wsgi
 
 recursive-include pvlogweb/templates *.html
-recursive-include assets/public *.js *.css
+recursive-include static *.js *.css

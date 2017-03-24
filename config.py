@@ -1,6 +1,6 @@
 DEBUG = True
 
-WEBPACK_MANIFEST_PATH = '../assets/manifest.json'
+WEBPACK_MANIFEST_PATH = '../manifest.json'
 
 SESSION_TYPE = 'filesystem'
 
@@ -10,3 +10,5 @@ LANGUAGES = {
         'en': 'English',
         'de': 'Deutsch'
 }
+
+STATIC_FOLDER = None

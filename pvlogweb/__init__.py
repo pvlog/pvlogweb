@@ -7,7 +7,7 @@ from flask_webpack import Webpack
 from pvlogweb.converters.DateConverter import DateConverter
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 app.config.from_object("config")
 
 babel = Babel(app)
@@ -22,9 +22,10 @@ app.register_blueprint(admin, url_prefix='/admin')
 from public.views import public
 app.register_blueprint(public)
 
-@app.route("/assets/<path:filename>")
+@app.route("/static/<path:filename>")
 def send_asset(filename):
-    return send_from_directory("../assets/public", filename)
+    print "sending file"
+    return send_from_directory("../static", filename)
 
 @babel.localeselector
 def get_locale():

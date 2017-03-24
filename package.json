@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server -d --config webpack.config.js --progress --colors --port 2992 --content-base build/public",
     "build": "webpack -d --config webpack.config.js --progress --profile --colors",
-    "build-production": "PUBLIC_PATH='/assets/' webpack --config webpack.config.js -p --progress --profile --colors"
+    "build-production": "PUBLIC_PATH='/static/' webpack --config webpack.config.js -p --progress --profile --colors"
   },
   "author": "",
   "license": "ISC",
