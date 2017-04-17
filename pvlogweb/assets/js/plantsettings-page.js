@@ -1,9 +1,12 @@
 import Gettext from 'node-gettext';
+import 'bootstrap'
+import 'bootstrap-editable';
 import 'knockout.x-editable';
 import 'knockout.validation';
 import 'bootstrap-notify'
 import * as ko from 'knockout';
 import {getJson} from 'jsonhelper';
+import $ from'jquery';
 
 var gt = new Gettext({domain: 'pvlogweb'});
 var _ = function(msgid) { return gt.gettext(msgid); };
@@ -238,5 +241,4 @@ $(function() {
 		messageTemplate: null
 	}, true)
 	ko.applyBindings(new PlantListModel(plants, inverters, connections, protocols));
-	
 });

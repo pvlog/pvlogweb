@@ -9,8 +9,8 @@
 {% block scripts %}
 {{ javascript_tag('event') | safe }}
 <script>
-	$('#events').addClass("active");
 	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	var data = {{data|tojson}};
+	var inverters = {{ inverters|tojson|safe }};
 </script>
 {% endblock %}

@@ -1,19 +1,44 @@
+from pvlogweb import app
 from pvlogweb.util.util import json_rpc
-from auth import auth
+from auth import auth, verify_pw, save_pw
 from flask.json import jsonify
 from flask.templating import render_template
 from flask import request, Blueprint
 
-url = "http://192.168.178.82:8384"
+url = app.config['PVLOG_ADMIN_SERVER'];
 
-admin = Blueprint('admin', __name__,
-                        template_folder='templates')
+admin = Blueprint('admin', __name__, template_folder='templates')
 
 @admin.before_request
 @auth.login_required 
 def restrict_bp_to_admins():
     if (False):
         return jsonify({'error':'Unauthorized.'})
+
+
+@admin.route('/passwordSettings')
+def passwordsettings():
+        return render_template("admin/passwordsettings.html")
+
+
+@admin.route('/changePassword', methods=['GET', 'POST'])
+def changePassword():
+    passwords = request.get_json();
+    old_password = passwords['oldPassword'];
+    new_password1 = passwords['newPassword1'];
+    new_password2 = passwords['newPassword2'];
+
+    print old_password
+
+    if not verify_pw(old_password):
+        return jsonify({'error': {'message': 'Wrong old Password!'}})
+
+    if new_password1 != new_password2:
+        return jsonify({'error': {'message': 'New passwords are different!'}})
+
+    save_pw(new_password1)
+
+    return jsonify({})
 
 
 @admin.route('/get_plants')

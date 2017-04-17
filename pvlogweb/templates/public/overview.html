@@ -1,38 +1,41 @@
 {% extends "public/layout.html" %}
-{% block page_title %} Overview {% endblock %}
+{% block page_title %}{{ _('Overview') }}{% endblock %}
 {% block content %}
-<h1 class="page-header">Overview</h1>
-<div class="col-lg-3">
+<h1 class="page-header">{{ _('Overview') }}</h1>
+<div class="col-md-3">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			Plant Overview
+			{{ _('Plant Overview') }}
 		</div>
 		<div class="panel-body">
+			<p>
+				<b>{{ _('Datalogger Status:') }}</b> <span data-bind="text: dataloggerStatus"></span>
+			</p>
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th> <strong>Device</strong> </th>
-						<th> <strong>Status</strong> </th>
-						<th> <strong>PAC</strong> </th>
-						<th> <strong>PDC</strong> </th>
+						<th> <strong>{{ _('Device') }}</strong> </th>
+						<th> <strong>{{ _('Status') }}</strong> </th>
+						<th> <strong>{{ _('PAC') }}</strong> </th>
+						<th> <strong>{{ _('PDC') }}</strong> </th>
 					</tr>
 				</thead>
-				<tr id="templateRow" style="display: none">
-					<td data-device=''> </td>
-					<td data-status=''> </td>
-					<td data-pac=''> </td>
-					<td data-pdc=''> </td>
-				</tr>
-				<tbody id="statusContent">
+				<tbody data-bind="foreach: invertersData">
+					<tr>
+						<td data-bind='text: name'> </td>
+						<td data-bind='text: status'> </td>
+						<td data-bind='text: pac'> </td>
+						<td data-bind='text: pdc'> </td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
 </div>
-<div class="col-lg-9">
+<div class="col-md-9">
 	<div class="panel panel-default">
 				<div class="panel-heading">
-					<span> Solar Data for the last 30 days</span>
+					<span>{{ _('Solar Data for the last 30 days') }}</span>
 				</div>
 		<div class="panel-body">
 			<div id="chart"></div>
@@ -44,8 +47,8 @@
 {{ javascript_tag('overview') | safe }}
 
 <script>
-	$('#overview').addClass("active");
 	var data = {{data|tojson}};
 	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var inverters = {{ inverters|tojson|safe }};
 </script>
 {% endblock %}

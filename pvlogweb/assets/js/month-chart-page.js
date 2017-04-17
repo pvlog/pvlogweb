@@ -2,8 +2,12 @@ import {createHighchartSeries} from 'chart';
 import Gettext from 'node-gettext';
 import Highcharts from 'highcharts';
 import 'bootstrap-datepicker';
+import moment from 'moment';
+import 'jquery';
 
 $(function() {
+	$('#chartNav').addClass('collapse in');
+	$('#month').addClass("active");
 	var gt = new Gettext({domain: 'pvlogweb'});
 	var _ = function(msgid) { return gt.gettext(msgid); };
 	//var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
@@ -20,7 +24,7 @@ $(function() {
 		location.href = SCRIPT_ROOT + "/monthly/" + monthDate;
 	});
 	
-	var chartData = createHighchartSeries(data, 2);
+	var chartData = createHighchartSeries(data, 2, inverters);
 
 //	$('#chart').highcharts({
 		
@@ -72,6 +76,19 @@ $(function() {
 			align : 'right',
 			verticalAlign : 'middle',
 			borderWidth : 0
+		},
+		plotOptions : {
+			series : {
+				cursor : 'pointer',
+				point : {
+					events : {
+						click : function() {
+							var d = moment(this.category)
+							location.href = SCRIPT_ROOT + "/daily/" + d.format("YYYY-MM-DD");
+						}
+					}
+				}
+			}
 		},
 		series : chartData
 	});

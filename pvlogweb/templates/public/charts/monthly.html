@@ -28,10 +28,9 @@
 {{ javascript_tag('month_chart') | safe }}
 
 	<script type="text/javascript">
-		$('#chartNav').addClass('collapse in');
-		$('#month').addClass("active");
 		var data = {{data|tojson}};
 		var curDate = new Date("{{current}}");
 		var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		var inverters = {{ inverters|tojson|safe }};
 	</script>
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends "public/layout.html" %}
-{% block page_title %} Month Output for {{ current }} {% endblock %}
+{% block page_title %} Year Output for {{ current }} {% endblock %}
 {% block content %}
 <div class="lg-12">
 	{% if error %}
@@ -25,23 +25,12 @@
 </div>
 {% endblock %}
 {% block scripts %}
-{{ javascript_tag('total_chart') | safe }}
+{{ javascript_tag('year_chart') | safe }}
 
 <script type="text/javascript">
-	$('#chartNav').addClass('collapse in');
-	$('#year').addClass("active");
 	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 	var data = {{data|tojson}};
 	var curDate = new Date("{{current}}");
-
-	$('#datepicker').datepicker( {
-		useCurrent: false,
-		format: "yyyy",
-		startView: "years",
-		minViewMode: "years",
-		defaultViewDate: {"year": curDate.getFullYear() }
-	}).on('changeDate', function(e) {
-	location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
-	});
+	var inverters = {{ inverters|tojson|safe }};
 </script>
 {% endblock %}

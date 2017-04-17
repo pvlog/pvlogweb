@@ -1,13 +1,16 @@
 import {createHighchartSeries} from 'chart';
+import {getInverterInfo} from 'pvlogwebutil';
+import * as ko from 'knockout';
 import Gettext from 'node-gettext';
 import Highcharts from 'highcharts';
+import {getJson} from 'jsonhelper';
+import moment from 'moment';
+import $ from'jquery';
 
-/**
- * 
- * @param liveData json live data
- * @returns return array of rows id the following format:
- *          <tr><th>inverterId</th> <th>status</th> <th>pac</th> <th>pdc</th></tr>
- */
+var gt = new Gettext({domain: 'pvlogweb'});
+var _ = function(msgid) { return gt.gettext(msgid); };
+
+
 function extractLiveData(liveData) {
 	if (liveData == null) {
 		return null;
@@ -28,10 +31,10 @@ function extractLiveData(liveData) {
 					pdc = pdc + pdcTracker['power'];
 				}
 			}
-			
+
 			result.push({
-				inverter: inverterId,
-				status: '?',
+				id: inverterId,
+				status: 'OK',
 				pac: pac,
 				pdc: pdc
 			});
@@ -39,51 +42,68 @@ function extractLiveData(liveData) {
 	}
 		
 	return result;
-		
-//		let row = '<th>' + inverterId + '</th>' + 
-//		          '<th>' + '?' + '</th>' + 
-//		          '<th>' + pac + '</th>' +
-//		          '<th>' + pdc + '</th>';
-//		
-//		result.push('<tr>' + row + '</tr>');
 }
 
-/**
- * Update live data table.
- */
-function loadData() {
-	$.getJSON(SCRIPT_ROOT + '/live_data', {}, function(data) {
-		let rowData = extractLiveData(data);
-		
-		let templateRow = $('#templateRow');
-		
-		let status = [];
-		for (let r of rowData) {
-			let row = templateRow.clone().removeAttr('id').removeAttr('style');
-		
-			row.find('*[data-device]').html(r.inverter);
-			row.find('*[data-status]').html(r.status);
-			row.find('*[data-pac]').html(r.pac + 'W');
-			row.find('*[data-pdc]').html(r.pdc + 'W');
-			
-			$('#statusContent').html(row);
-		}
-	})
+
+function InverterDataModel(id, name, status, pac, pdc) {
+	var self = this;
+	self.id   = ko.observable(id);
+	self.name = ko.observable(name);
+	self.status = ko.observable(status);
+	self.pac  = ko.observable(pac);
+	self.pdc  = ko.observable(pdc);
 }
+
+
+function LiveDataModel(inverters) {
+	var self = this;
+
+	self.invertersData = ko.observableArray();
+
+	self.dataloggerStatus = ko.observable(_('UNKNOWN'));
+	
+	self.loadData = function() {
+		getJson(SCRIPT_ROOT + '/liveData', {}, function(result) {
+			const invertersData = extractLiveData(result);
+
+			let newInverterData = []
+			for (let invData of invertersData) {
+				let name = getInverterInfo(inverters, invData.id).name;
+				if (name == null) {
+					name = invData.id;
+				}
+				newInverterData.push(new InverterDataModel(invData.id, name, invData.status, invData.pac, invData.pdc))
+			}
+			self.invertersData(newInverterData);
+		});
+
+		getJson(SCRIPT_ROOT + '/dataloggerStatus', {}, function(result) {
+			let dataloggerStatus = _('UNKNOWN');
+			switch (result.dataloggerStatus) {
+				case 0: dataloggerStatus = _('OK'); break;
+				case 1: dataloggerStatus = _('SLEEPING (NIGHT)'); break;
+				case 2: dataloggerStatus = _('WARNING'); break;
+				case 3: dataloggerStatus = _('ERROR'); break;
+				case 4: dataloggerStatus = _('PAUSED'); break;
+				default: dataloggerStatus = _('UNKNOWN'); break;
+			}
+
+			self.dataloggerStatus(dataloggerStatus);
+		});
+	}
+}
+
 
 $(function() {
-	var refreshId = setInterval(loadData, 10 * 1000);
+	$('#overview').addClass("active");
 	
-	loadData();
-	
-	var gt = new Gettext({domain: 'pvlogweb'});
-	var _ = function(msgid) { return gt.gettext(msgid); };
-	//var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
-	
-	var chartData = createHighchartSeries(data, 2);
+	const liveDataModel = new LiveDataModel(inverters);
+	let refreshId = setInterval(liveDataModel.loadData, 10 * 1000);
 
-//	$('#chart').highcharts({
-		
+	ko.applyBindings(liveDataModel);
+	liveDataModel.loadData();
+
+	var chartData = createHighchartSeries(data, 2, inverters);
 	Highcharts.chart('chart', {
 		title : {
 			text : _('Last 30 Days Production'),
@@ -132,6 +152,19 @@ $(function() {
 			align : 'right',
 			verticalAlign : 'middle',
 			borderWidth : 0
+		},
+		plotOptions : {
+			series : {
+				cursor : 'pointer',
+				point : {
+					events : {
+						click : function() {
+							var d = moment(this.category)
+							location.href = SCRIPT_ROOT + "/daily/" + d.format("YYYY-MM-DD");
+						}
+					}
+				}
+			}
 		},
 		series : chartData
 	});

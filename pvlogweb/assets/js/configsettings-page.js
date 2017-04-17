@@ -1,4 +1,6 @@
 import * as ko from 'knockout';
+import 'bootstrap'
+import 'bootstrap-editable';
 import 'knockout.x-editable'
 
 function Config(key, value) {

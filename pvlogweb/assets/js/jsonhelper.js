@@ -1,3 +1,5 @@
+import 'bootstrap-notify'
+
 export function getJson(url, data, success) {
 	$.ajax({
 		type: 'POST',

@@ -1,3 +1,5 @@
+import {getInverterInfo} from 'pvlogwebutil';
+
 export function extractInverterData(inverterData) {
 	// generate all series data
 	var data = [];
@@ -22,16 +24,20 @@ function extractData(data) {
 	return invData;
 }
 
-export function createHighchartSeries(chartData, decimals) {
+export function createHighchartSeries(chartData, decimals, inverters) {
 	var series = [];
 
 	var invertersData = extractData(chartData);
 
 	for (let inverterId in invertersData) {
 		let data = invertersData[inverterId];
+		let name = getInverterInfo(inverters, inverterId).name;
+		if (name == null) {
+			name = inverterId;
+		}
 
 		series.push({
-			name : inverterId,
+			name : name,
 			data : data,
 			type : 'column',
 			yAxis : 0,

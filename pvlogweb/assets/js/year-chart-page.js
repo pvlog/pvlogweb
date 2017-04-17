@@ -2,13 +2,27 @@ import {createHighchartSeries} from 'chart';
 import Gettext from 'node-gettext';
 import Highcharts from 'highcharts';
 import 'bootstrap-datepicker';
+import moment from 'moment';
+import 'jquery';
 
 $(function () {
 	var gt = new Gettext({domain: 'pvlogweb'});
 	var _ = function(msgid) { return gt.gettext(msgid); };
-	//var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };
-	
-	var chartData = createHighchartSeries(data, 0);
+
+	$('#chartNav').addClass('collapse in');
+	$('#year').addClass("active");
+
+	$('#datepicker').datepicker( {
+		useCurrent: false,
+		format: "yyyy",
+		startView: "years",
+		minViewMode: "years",
+		defaultViewDate: {"year": curDate.getFullYear() }
+	}).on('changeDate', function(e) {
+	location.href = SCRIPT_ROOT + "/yearly/" + e.date.getFullYear()
+	});
+
+	var chartData = createHighchartSeries(data, 0, inverters);
 
 	Highcharts.chart('chart', {
 		title: {
@@ -64,10 +78,8 @@ $(function () {
 				point : {
 					events : {
 						click : function() {
-							var d = new Date(this.category)
-							var year = d.getFullYear();
-							var month = String("00" + (d.getMonth() + 1)).slice(-2);
-							location.href = SCRIPT_ROOT + "/monthly/" + year + "-" + month;
+							var d = moment(this.category)
+							location.href = SCRIPT_ROOT + "/monthly/" + d.format("YYYY-MM");
 						}
 					}
 				}
@@ -75,4 +87,4 @@ $(function () {
 		},
 		series: chartData
 	});
-});
+})

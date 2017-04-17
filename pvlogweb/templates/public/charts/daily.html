@@ -48,9 +48,8 @@
 {{ javascript_tag('day_chart') | safe }}
 
 <script type="text/javascript">
-	$('#chartNav').addClass('collapse in');
-	$('#day').addClass("active");
 	var data = {{data|tojson}};
 	var SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	var inverters = {{ inverters|tojson|safe }};
 </script>
 {% endblock %}

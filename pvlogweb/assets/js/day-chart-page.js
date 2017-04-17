@@ -1,6 +1,7 @@
 import Gettext from 'node-gettext';
 import Highcharts from 'highcharts';
 import 'bootstrap-datepicker';
+import 'jquery';
 
 function extractInverterData(inverterDayData) {
 	//generate all series data
@@ -298,6 +299,9 @@ function createHighchartSeries(dayData) {
 }
 
 $(function() {
+	$('#chartNav').addClass('collapse in');
+	$('#day').addClass("active");
+
 	var gt = new Gettext({domain: 'pvlogweb'});
 	var _ = function(msgid) { return gt.gettext(msgid); };
 	var ngettext = function(msgid, msgid_plural, n) { return gt.ngettext(msgid, msgid_plural, n); };

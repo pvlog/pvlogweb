@@ -29,6 +29,6 @@ def send_asset(filename):
 
 @babel.localeselector
 def get_locale():
-     return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+    return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
 
 

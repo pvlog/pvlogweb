@@ -62,11 +62,11 @@ var common = [
 ];
 
 var vendor_common = [
-	//'bootstrap',
+	'jquery/dist/jquery.js',
 	'bootstrap/dist/css/bootstrap.css',
+	'font-awesome/css/font-awesome.css',
+	'bootstrap/dist/js/bootstrap.js',
 	'bootstrap-datepicker/dist/css/bootstrap-datepicker.css',
-	//'metismenu'
-//	'metismenu/dist/css/metismenu.'
 ];
 
 
@@ -102,11 +102,17 @@ var chunks = {
 		emailsettings : [
 			path.join(contextRoot, assets.scripts.path, 'emailsettings-page.js')
 		].concat(common).concat(vendor_common),
+		passwordsettings: [
+			path.join(contextRoot, assets.scripts.path, 'passwordsettings-page.js')
+		].concat(common).concat(vendor_common),
+		statistics: [
+			path.join(contextRoot, assets.scripts.path, 'statistics-page.js')
+		].concat(common).concat(vendor_common),
 	};
 
 // Do not parse vendor files
 var noParse = [
-	path.join(contextRoot, assets.scripts.path, 'vendor'),
+	//path.join(contextRoot, assets.scripts.path, 'vendor'),
 	path.join(contextRoot, assets.styles.path, 'vendor')
 ];
 
@@ -125,7 +131,12 @@ function isExternal(module) {
 
 // Plugins Config
 var plugins = [
-	new webpack.NoErrorsPlugin(),
+	//new webpack.NoErrorsPlugin(),
+	new webpack.ProvidePlugin({
+		$: "jquery",
+		jQuery: "jquery",
+		"window.jQuery": "jquery"
+	}),
 
 	new webpack.optimize.CommonsChunkPlugin({
 		name : 'common',
@@ -183,16 +194,16 @@ module.exports = {
 		filename : assets.scripts.filename,
 		chunkFilename : assets.scripts.chunkFilename
 	},
-	externals : {
-		'jquery' : 'jQuery'
-	},
+//	externals : {
+//		'jquery' : 'jQuery'
+//	},
 	resolve : {
 		//Allow requiring files without supplying the extension.
 		extensions : [ '', '.js', '.css', '.scss' ],
 		modulesDirectories: ["web_modules", "node_modules", path.join(contextRoot, assets.scripts.path)]
 	},
 	module : {
-		noParse : noParse,
+		//noParse : noParse,
 		loaders : [
 				{
 					test : /\.js$/i,
