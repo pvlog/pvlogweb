@@ -3,6 +3,7 @@ include manifest.json
 include config.py
 include runserver.py
 include pvlogweb.wsgi
+include password.conf
 
 recursive-include pvlogweb/templates *.html
 recursive-include static *.js *.css
