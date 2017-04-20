@@ -317,6 +317,12 @@ $(function() {
 		location.href = SCRIPT_ROOT + "/daily/" + dayDate
 	});
 
+	Highcharts.setOptions({
+		global: {
+			useUTC: false
+		}
+	});
+
 	Highcharts.chart('daily-chart',{
 		title : {
 			text : _('Day Data'),
