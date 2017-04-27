@@ -7,8 +7,9 @@ function extractInverterData(inverterDayData) {
 	//generate all series data
 	var data = {
 		//times: [],
-		totalPower : [],
-		frequency : [],
+		totalPower: [],
+		dayYield: [],
+		frequency: [],
 		trackerTotalPower: [],
 		efficiency: [],
 		trackerPower : {},
@@ -25,7 +26,13 @@ function extractInverterData(inverterDayData) {
 
 		let value = {};
 
-		data.frequency.push([ time, spotData["frequency"] / 1000 ]);
+		if ("frequency" in data) {
+			data.frequency.push([ time, spotData["frequency"] / 1000 ]);
+		}
+
+		if ("dayYield" in data) {
+			data.dayYield.push([ time, spotData["dayYield"] / 1000])
+		}
 
 		data.totalPower.push([ time, spotData["power"] ]);
 
@@ -131,6 +138,25 @@ function createHighchartSeries(dayData) {
 			tooltip : {
 				valueDecimals : 3,
 				valueSuffix : ' Hz'
+			},
+			marker : {
+				enabled : true,
+				radius : 2
+			}
+		});
+
+		series.push({
+			name : _("Current Day Yield"),
+			data : data.dayYield,
+			type : 'area',
+			fillOpacity: 0.5,
+			yAxis : 5,
+			inverterId : inverterId,
+			data_type : "kWh",
+			visible : false,
+			tooltip : {
+				valueDecimals : 3,
+				valueSuffix : ' kWh'
 			},
 			marker : {
 				enabled : true,
@@ -418,7 +444,22 @@ $(function() {
 				}
 			},
 			showEmpty : false
-		},
+		}, { // six yAxis
+			//gridLineWidth: 0,
+			title : {
+				text : _('Energy'),
+				style : {
+				//color: Highcharts.getOptions().colors[0]
+				}
+			},
+			labels : {
+				format : '{value} kWh',
+				style : {
+				//color: Highcharts.getOptions().colors[0]
+				}
+			},
+			showEmpty : false
+		}
 		],
 		tooltip : {
 			shared : true

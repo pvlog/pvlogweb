@@ -22,10 +22,10 @@ app.register_blueprint(admin, url_prefix='/admin')
 from public.views import public
 app.register_blueprint(public)
 
-@app.route("/static/<path:filename>")
-def send_asset(filename):
-    print "sending file"
-    return send_from_directory("../static", filename)
+#@app.route("/static/<path:filename>")
+#def send_asset(filename):
+#    print "sending file"
+#    return send_from_directory("../static", filename)
 
 @babel.localeselector
 def get_locale():

@@ -143,3 +143,8 @@ def save_email():
 def send_test_email():
     res = json_rpc(url, "sendTestEmail", {})
     return jsonify(res)
+
+@admin.route("/datauploadsettings")
+def datauploadsettings():
+    configs = json_rpc(url, "getConfigs", {})
+    return render_template("admin/dataupload.html", configs=configs)

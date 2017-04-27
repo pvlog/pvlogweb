@@ -108,6 +108,9 @@ var chunks = {
 		statistics: [
 			path.join(contextRoot, assets.scripts.path, 'statistics-page.js')
 		].concat(common).concat(vendor_common),
+		datauploadsettings: [
+			path.join(contextRoot, assets.scripts.path, 'datauploadsettings-page.js')
+		].concat(common).concat(vendor_common),
 	};
 
 // Do not parse vendor files
