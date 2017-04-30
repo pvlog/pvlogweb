@@ -10,6 +10,7 @@ setup(
     description="Pvlog web interface",
     author="",
     author_email="",
+    zip_safe = False,
     packages=find_packages(),
     include_package_data=True,
     install_requires=[

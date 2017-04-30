@@ -1,6 +1,5 @@
-include manifest.json
+include pvlogweb/manifest.json
 
-include config.py
 include runserver.py
 include pvlogweb.wsgi
 include password.conf

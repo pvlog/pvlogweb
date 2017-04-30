@@ -165,7 +165,7 @@ var plugins = [
 
 	//new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, languages),
 
-	new ManifestRevisionPlugin(path.join('./', 'manifest.json'), {
+	new ManifestRevisionPlugin(path.join('./', 'pvlogweb/manifest.json'), {
 		rootAssetPath: rootAssetPath,
 		ignorePaths: ['/fonts', '/styles', '/scripts']
 	})

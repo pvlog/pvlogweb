@@ -4,11 +4,13 @@ from flask_babel import Babel
 from flask_session import Session
 from flask_webpack import Webpack
 
-from pvlogweb.converters.DateConverter import DateConverter
-
+from converters.DateConverter import DateConverter
 
 app = Flask(__name__, static_folder=None)
-app.config.from_object("config")
+app.config.from_object('pvlogweb.config')
+
+print app.config['WEBPACK_MANIFEST_PATH']
+print app.config['SESSION_TYPE']
 
 babel = Babel(app)
 session = Session(app)
