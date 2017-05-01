@@ -16,9 +16,9 @@ def verify_password(username, password):
 def verify_pw(password):
     password_file = app.config['PASSWORD_FILE'];
 
+    app.logger.info('Checking password password hash file: %s', password_file)
     with open(password_file, 'r') as f:
         password_hash = f.readline().rstrip()
-        print password_hash
         return check_password_hash(password_hash, password)
 
     return False
@@ -30,3 +30,4 @@ def save_pw(password):
 
     with open(password_file, 'w') as f:
         f.write(password_hash)
+        app.logger.info('Saved password to password file %s', password_file)

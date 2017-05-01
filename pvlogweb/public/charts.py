@@ -3,7 +3,7 @@ from flask.templating import render_template
 from datetime import timedelta, date, datetime
 import requests
 import json
-from pvlogweb.util import CommunicationError
+from pvlogweb.util import pvlogweb_exceptions
 from pvlogweb.util.util import last_day_of_month
 # from math import cos
 # from pvlogweb.data.database import get_spot_values
@@ -40,7 +40,7 @@ def daily(day_date=None):
         url, data=json.dumps(payload), headers=headers).json()
         
     if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
-        raise CommunicationError("getSpotData")
+        raise pvlogweb_exceptions("getSpotData")
 
     return render_template("charts/daily.html", current=day_date, before=yesterday, after=tomorrow,
                            data=response["result"])
@@ -70,7 +70,7 @@ def monthly(date_string=None):
         url, data=json.dumps(payload), headers=headers).json()
          
     if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
-        raise CommunicationError("getDayData")
+        raise pvlogweb_exceptions("getDayData")
     
     return render_template("charts/monthly.html", current=cur_date.strftime("%Y-%m"), before=before_date.strftime("%Y-%m"),
                             after=after_date.strftime("%Y-%m"), data=response["result"])
@@ -96,7 +96,7 @@ def yearly(date_string=None):
         url, data=json.dumps(payload), headers=headers).json()
          
     if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
-        raise CommunicationError("getMonthData")
+        raise pvlogweb_exceptions("getMonthData")
 
     return render_template("charts/yearly.html", current=year, before=year - 1,
                             after=year + 1, data=response["result"])
@@ -114,7 +114,7 @@ def totaly(date_string=None):
         url, data=json.dumps(payload), headers=headers).json()
          
     if (response["jsonrpc"] != "2.0") or (response["id"] != 0):
-        raise CommunicationError("getYearData")
+        raise pvlogweb_exceptions("getYearData")
 
     return render_template("charts/totaly.html", data=response["result"])
 
