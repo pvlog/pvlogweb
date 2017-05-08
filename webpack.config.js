@@ -58,7 +58,8 @@ var assets = {
 var common = [
 	path.join(contextRoot, assets.styles.path, 'dashboard.css'),
 	path.join(contextRoot, assets.styles.path, 'ie10-viewport-bug-workaround.css'),
-	path.join(contextRoot, assets.scripts.path, 'sb-admin-2.js')	
+	path.join(contextRoot, assets.scripts.path, 'sb-admin-2.js'),
+	path.join(contextRoot, assets.styles.path, 'util.css')
 ];
 
 var vendor_common = [

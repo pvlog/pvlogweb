@@ -21,22 +21,31 @@
 					</a>
 				</div>
 				<div class="panel-body">
-<!-- 					<ul class="list-inline"> -->
-<!-- 						<li>Inverter 1</li> -->
-<!-- 						<li>Inverter 2</li> -->
-<!-- 						<li>Inverter 3</li> -->
-<!-- 					</ul> -->
+					<div data-bind="if: inverters.length > 1" class="row">
+						<div class="col-md12">
+							<div class="inverterList" style="margin-left: 50px">
+								<ul  class="legend list-inline" data-bind="foreach: inverters">
+									<li data-bind="click: $parent.toggleInverter">
+										<span data-bind="text: name, style: {color: enabled() ? 'black' : 'lightgrey'}"></span>
+										<div class="inverterLegend inline" data-bind="renderDashLine: dashStyle, color: enabled() ? 'black' : 'lightgrey'"></div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
 					<div class="row">
-						<div class="col-lg-12">
+						<div class="col-md-10">
 							<div id="daily-chart" style="min-height:65vh;"></div>
 						</div>
-<!-- 						<div class="col-lg-1"> -->
-<!-- 							<div id="legend"> -->
-<!-- 								<div>Udc</div> -->
-<!-- 								<div>Idc</div> -->
-<!-- 								<div>Pdc</div> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
+						<div class="col-md-2">
+							<ul  class="legend" data-bind="foreach: types">
+								<li data-bind="click: $parent.toggleType">
+									<div class="symbol" data-bind="style: { backgroundColor: enabled() ? color : 'lightgrey'}">
+									</div>
+									<span data-bind="text: name, style: {color: enabled() ? 'black' : 'lightgrey'}"></span>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

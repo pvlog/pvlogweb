@@ -1,3 +1,33 @@
 .paddError {
 	margin-left: 0.5em
 }
+
+.symbol {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-right: 4px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.legend {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.inverterLegend {
+	height: 20px;
+	width: 100px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.legend li {
+	cursor: pointer;
+	margin: 0 0 0 0;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica, sans-serif
+}

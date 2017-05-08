@@ -78,6 +78,9 @@ $(function() {
 			borderWidth : 0
 		},
 		plotOptions : {
+			column: {
+				stacking: 'normal'
+			},
 			series : {
 				cursor : 'pointer',
 				point : {
